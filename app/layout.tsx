@@ -1,26 +1,21 @@
 import type { Metadata } from "next";
-import { Inter_Tight, Instrument_Serif } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { CustomCursor } from "@/components/ui/CustomCursor";
+import { FontsReady } from "@/components/ui/FontsReady";
 
-const interTight = Inter_Tight({
-  variable: "--font-inter-tight",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  subsets: ["latin"],
-  weight: "400",
+const switzer = localFont({
+  src: "./fonts/Switzer-Variable.woff2",
+  variable: "--font-switzer",
+  weight: "100 900",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Form&Fun Studio",
+  title: "ezibuilds | Creative Technology Studio",
   description:
-    "Form&Fun is a global creative tech studio forging delightful experiences by blending design, technology, and storytelling.",
+    "ezibuilds is a creative technology studio designing, building, and launching digital products that drive real business outcomes.",
 };
 
 export default function RootLayout({
@@ -29,11 +24,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${interTight.variable} ${instrumentSerif.variable}`}
-    >
-      <body className="min-h-screen bg-cream text-ink font-sans antialiased">
+    <html lang="en" className={switzer.variable}>
+      <body className="min-h-screen bg-paper text-ink font-sans antialiased">
+        <FontsReady />
         <SmoothScroll>
           <CustomCursor />
           {children}

@@ -5,16 +5,16 @@ import { team } from "@/lib/data";
 
 export function Team() {
   return (
-    <section className="bg-cream py-24 sm:py-32">
-      <div className="mx-auto max-w-[88rem] px-6 sm:px-10">
+    <section className="bg-paper py-24 sm:py-32">
+      <div className="px-edge">
         <header className="mb-16 max-w-3xl">
           <p className="mb-3 text-xs uppercase tracking-[0.22em] text-muted">
             The studio
           </p>
-          <h2 className="text-[clamp(2.5rem,6.5vw,6rem)] font-medium leading-[0.95] tracking-[-0.02em]">
+          <h2 className="text-[clamp(2.5rem,6.5vw,6rem)] leading-[0.95] tracking-[-0.02em]">
             A small team of
             <br />
-            <span className="font-serif italic">makers &amp; builders</span>
+            <span className="text-muted">makers &amp; builders</span>
           </h2>
           <p className="mt-6 max-w-xl text-base leading-relaxed text-muted">
             We&apos;re designers, engineers, and strategists shipping the
@@ -49,7 +49,7 @@ export function Team() {
                     .join("")}
                 </span>
                 <span
-                  className="absolute -bottom-12 -right-4 select-none text-[clamp(7rem,12vw,11rem)] font-medium leading-none tracking-[-0.04em]"
+                  className="absolute -bottom-12 -right-4 select-none text-[clamp(7rem,12vw,11rem)] leading-none tracking-[-0.04em]"
                   style={{
                     color: m.accent === "#ffd166" ? "rgba(10,10,10,0.18)" : "rgba(255,255,255,0.18)",
                   }}
@@ -65,7 +65,7 @@ export function Team() {
                 </div>
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-medium tracking-tight">{m.name}</h3>
+                <h3 className="text-xl tracking-tight">{m.name}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">
                   {m.bio}
                 </p>

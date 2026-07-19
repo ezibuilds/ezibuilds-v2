@@ -3,46 +3,26 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { works } from "@/lib/data";
+import { WordFill } from "@/components/ui/WordFill";
 
 export function Hero() {
-  const introRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = introRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) el.classList.add("in-view");
-        });
-      },
-      { threshold: 0.4 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
   return (
-    <section
-      id="top"
-      className="relative min-h-screen overflow-hidden bg-cream pt-28 sm:pt-32"
-    >
-      {/* Studio headline */}
-      <div className="mx-auto max-w-[88rem] px-6 pb-8 sm:px-10">
-        <h1 className="text-[clamp(2.5rem,7.5vw,7rem)] font-medium leading-[0.95] tracking-[-0.03em]">
-          ezibuilds <span className="font-serif italic text-ink/70">studio</span>
+    <section id="top" className="relative overflow-hidden bg-paper">
+      {/* Wordmark holds the full viewport until fonts resolve, then collapses */}
+      <div className="hero-stage flex items-center justify-center px-edge">
+        {/* Smaller on mobile: the fixed 1.25rem gutter eats proportionally
+            more width there than 1vw does on desktop. */}
+        <h1 className="w-full text-center text-[22.5vw] leading-[0.85] tracking-[-0.04em] md:text-[25vw]">
+          ezibuilds
+          <sup className="align-super text-[0.14em] tracking-normal">™</sup>
         </h1>
-        <p className="mt-3 max-w-2xl text-base text-muted sm:text-lg">
-          We design, build, and launch digital products that people love and
-          businesses scale on.
-        </p>
       </div>
 
-      {/* Works carousel band */}
+      {/* Works carousel, rises from below once the wordmark settles */}
       <div
         data-cursor="drag"
         data-cursor-label="DRAG"
-        className="relative -mx-6 overflow-x-auto overflow-y-hidden px-6 pb-10 sm:-mx-10 sm:px-10 lg:overflow-hidden"
+        className="hero-rise relative overflow-x-auto overflow-y-hidden px-edge pt-4 pb-10 lg:overflow-hidden"
       >
         <div className="flex min-w-max gap-4 lg:hidden">
           {works.map((w) => (
@@ -53,23 +33,22 @@ export function Hero() {
         <CarouselDesktop />
       </div>
 
-      {/* Studio intro */}
-      <div className="mx-auto max-w-[88rem] px-6 pb-20 sm:px-10">
-        <div ref={introRef} className="reveal-mask">
-          <p className="text-[clamp(1.5rem,3.4vw,3.25rem)] font-medium leading-[1.1] tracking-tight">
-            We are a global product studio designing, building, and launching
-            digital products that drive real business outcomes — from first
-            wireframe to scale.
-          </p>
+      {/* Studio intro: words fill from grey to ink on scroll */}
+      <div className="px-edge pb-20 pt-16">
+        <p className="mb-6 text-meta text-ink">The studio</p>
+        <WordFill
+          className="text-display-lg"
+          text="We are a global product studio designing, building, and launching digital products that drive real business outcomes, from first wireframe to scale."
+        >
           <a
-            href="#about"
+            href="#capabilities"
             data-cursor="hover"
-            className="mt-7 inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm font-medium transition-colors hover:bg-ink hover:text-cream"
+            className="ml-4 inline-flex translate-y-[-0.15em] items-center gap-2 rounded-pill bg-ink px-5 py-2.5 text-meta text-paper transition-colors hover:bg-ink-soft"
           >
             Learn more
             <Arrow />
           </a>
-        </div>
+        </WordFill>
       </div>
     </section>
   );
@@ -83,7 +62,7 @@ function CarouselDesktop() {
     if (!track) return;
     if (window.matchMedia("(hover: none)").matches) return;
 
-    const SPEED = 0.6; // px per frame — constant auto-scroll
+    const SPEED = 0.6; // px per frame, constant auto-scroll
     let pos = 0;
     let offset = 0; // additional offset from drag
     let dragging = false;
@@ -183,7 +162,7 @@ function WorkCard({ work }: { work: (typeof works)[number] }) {
       </div>
 
       <div className="mt-auto">
-        <h3 className="text-[clamp(2.5rem,7vw,6rem)] font-medium leading-[0.95] tracking-[-0.02em]">
+        <h3 className="text-[clamp(2.5rem,7vw,6rem)] leading-[0.95] tracking-[-0.02em]">
           {work.client}
         </h3>
       </div>

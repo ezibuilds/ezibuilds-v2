@@ -1,6 +1,6 @@
 export function Marquee({
   speed = "normal",
-  text = ["ezibuild", "design", "technology", "studio"],
+  text = ["design", "build", "launch", "scale"],
   logo,
 }: {
   speed?: "slow" | "normal" | "fast";
@@ -15,8 +15,11 @@ export function Marquee({
       : "animate-marquee";
 
   return (
-    <div className="overflow-hidden bg-ink py-10 text-cream sm:py-14">
-      <div className={`marquee-track ${animClass} gap-12 pr-12`}>
+    <div className="overflow-hidden bg-paper py-6" aria-hidden>
+      {/* No gap on the track: the keyframe translates -50%, so the four rows
+          must tile at exactly 4x row width or the loop shows a seam. Spacing
+          lives on each row's trailing padding instead. */}
+      <div className={`marquee-track ${animClass}`}>
         {[0, 1, 2, 3].map((i) => (
           <Row key={i} text={text} logo={logo} />
         ))}
@@ -26,22 +29,20 @@ export function Marquee({
 }
 
 function Row({ text, logo }: { text: string[]; logo?: string }) {
+  // vw, not em: the gap sits on the flex row, whose own font-size is the
+  // inherited 16px, so an em value here would ignore the 7vw word size.
   return (
-    <div className="flex shrink-0 items-center gap-12 pr-12">
+    <div className="flex shrink-0 items-center gap-[2.5vw] pr-[2.5vw]">
       {text.map((word, i) => (
         <span
           key={word + i}
-          className={`text-[clamp(4rem,11vw,9rem)] font-medium leading-none tracking-[-0.02em] ${
-            i % 2 === 1 ? "text-cream/60" : ""
-          }`}
+          className="text-display-xl uppercase text-gray"
         >
           {word}
         </span>
       ))}
       {logo && (
-        <span className="flex h-[clamp(3.5rem,9vw,7rem)] items-center text-[clamp(4rem,11vw,9rem)] font-medium leading-none tracking-[-0.02em]">
-          {logo}
-        </span>
+        <span className="text-display-xl uppercase text-gray">{logo}</span>
       )}
     </div>
   );

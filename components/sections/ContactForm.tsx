@@ -34,7 +34,7 @@ export function ContactForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("submitting");
-    // Stub submit — replace with real endpoint later
+    // Stub submit, replace with real endpoint later
     await new Promise((r) => setTimeout(r, 600));
     // eslint-disable-next-line no-console
     console.log("[contact stub]", { name, email, message });
@@ -72,30 +72,30 @@ export function ContactForm({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 240 }}
-            className="relative ml-auto h-full w-full max-w-md overflow-y-auto bg-cream px-7 py-8 shadow-2xl"
+            className="relative ml-auto h-full w-full max-w-md overflow-y-auto bg-paper px-7 py-8 shadow-2xl"
           >
             <div className="mb-8 flex items-center justify-between">
-              <h2 className="text-2xl font-medium tracking-tight">Contact</h2>
+              <h2 className="text-2xl tracking-tight">Contact</h2>
               <button
                 type="button"
                 onClick={onClose}
                 data-cursor="hover"
-                className="rounded-full border border-line px-3 py-1.5 text-xs uppercase tracking-[0.18em] transition-colors hover:bg-ink hover:text-cream"
+                className="rounded-full border border-line px-3 py-1.5 text-xs uppercase tracking-[0.18em] transition-colors hover:bg-ink hover:text-paper"
               >
                 Close
               </button>
             </div>
 
             {status === "success" ? (
-              <div className="mt-12 rounded-2xl bg-ink p-8 text-cream">
-                <p className="text-lg font-medium">
+              <div className="mt-12 rounded-2xl bg-ink p-8 text-paper">
+                <p className="text-lg">
                   Thank you! Your submission has been received!
                 </p>
                 <button
                   type="button"
                   onClick={() => setStatus("idle")}
                   data-cursor="hover"
-                  className="mt-6 rounded-full bg-cream px-4 py-2 text-sm text-ink"
+                  className="mt-6 rounded-full bg-paper px-4 py-2 text-sm text-ink"
                 >
                   Send another
                 </button>
@@ -131,7 +131,7 @@ export function ContactForm({
                   disabled={status === "submitting"}
                   data-cursor="hover"
                   className={cn(
-                    "w-full rounded-full bg-ink py-3.5 text-sm font-medium text-cream transition-colors hover:bg-ink-2",
+                    "w-full rounded-full bg-ink py-3.5 text-sm text-paper transition-colors hover:bg-ink-soft",
                     status === "submitting" && "opacity-60"
                   )}
                 >

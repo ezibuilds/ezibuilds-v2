@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { ContactForm } from "@/components/sections/ContactForm";
+import { Logo } from "@/components/ui/Logo";
 
 export function Header() {
   const [contactOpen, setContactOpen] = useState(false);
@@ -20,24 +21,32 @@ export function Header() {
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-40 transition-all duration-300",
-          scrolled ? "px-4 pt-3" : "px-6 pt-5"
+          "fixed inset-x-0 top-0 z-40 px-edge transition-all duration-300",
+          scrolled ? "pt-3" : "pt-5"
         )}
       >
         <div
           className={cn(
-            "mx-auto flex max-w-[88rem] items-center justify-between transition-all",
-            scrolled &&
-              "rounded-full border border-line bg-cream/70 px-5 py-2 backdrop-blur-xl"
+            // The border is always present and always has an explicit colour.
+            // Dropping `border-line` instead would fall back to Tailwind v4's
+            // `currentColor` default (opaque ink), and transition-all would
+            // animate the hairline to black on the way out.
+            "flex w-full items-center justify-between border transition-all",
+            scrolled
+              ? "rounded-full border-line bg-paper/70 px-5 py-2 backdrop-blur-xl"
+              : "border-transparent"
           )}
         >
           <Link
             href="/"
             data-cursor="hover"
-            className="flex items-baseline gap-1.5 font-medium tracking-tight"
+            className="flex items-center gap-2.5 tracking-tight"
           >
-            <span className="text-[15px] font-semibold">ezibuilds</span>
-            <span className="text-[15px] text-muted">studio</span>
+            <Logo size={26} />
+            <span className="flex items-baseline gap-1.5">
+              <span className="text-[15px]">ezibuilds</span>
+              <span className="text-[15px] text-muted">studio</span>
+            </span>
           </Link>
           <nav className="flex items-center gap-1 text-[14px] sm:gap-2">
             <a
@@ -65,7 +74,7 @@ export function Header() {
               type="button"
               onClick={() => setContactOpen(true)}
               data-cursor="hover"
-              className="rounded-full bg-ink px-4 py-2 font-medium text-cream transition-colors hover:bg-ink-2"
+              className="rounded-full bg-ink px-4 py-2 text-paper transition-colors hover:bg-ink-soft"
             >
               Contact
             </button>

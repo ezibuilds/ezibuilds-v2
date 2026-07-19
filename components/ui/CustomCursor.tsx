@@ -93,7 +93,7 @@ export function CustomCursor() {
           {isTextLabel && label && (
             <div
               ref={labelRef}
-              className="absolute inset-0 flex items-center justify-center text-[10px] font-medium tracking-[0.18em] text-ink"
+              className="absolute inset-0 flex items-center justify-center text-[10px] tracking-[0.18em] text-ink"
             >
               {label}
             </div>
