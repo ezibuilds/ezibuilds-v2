@@ -1,9 +1,11 @@
-import Image from "next/image";
-
 export function Marquee({
   speed = "normal",
+  text = ["ezibuild", "design", "technology", "studio"],
+  logo,
 }: {
   speed?: "slow" | "normal" | "fast";
+  text?: string[];
+  logo?: string;
 }) {
   const animClass =
     speed === "slow"
@@ -16,34 +18,31 @@ export function Marquee({
     <div className="overflow-hidden bg-ink py-10 text-cream sm:py-14">
       <div className={`marquee-track ${animClass} gap-12 pr-12`}>
         {[0, 1, 2, 3].map((i) => (
-          <Row key={i} />
+          <Row key={i} text={text} logo={logo} />
         ))}
       </div>
     </div>
   );
 }
 
-function Row() {
+function Row({ text, logo }: { text: string[]; logo?: string }) {
   return (
     <div className="flex shrink-0 items-center gap-12 pr-12">
-      <span className="text-[clamp(4rem,11vw,9rem)] font-medium leading-none tracking-[-0.02em]">
-        Creative
-      </span>
-      <span className="text-[clamp(4rem,11vw,9rem)] font-medium leading-none tracking-[-0.02em] text-cream/60">
-        Technology
-      </span>
-      <span className="text-[clamp(4rem,11vw,9rem)] font-medium leading-none tracking-[-0.02em]">
-        Studio
-      </span>
-      <span className="flex h-[clamp(3.5rem,9vw,7rem)] items-center">
-        <Image
-          src="/logos/formfun.svg"
-          alt="Form&Fun"
-          width={649}
-          height={108}
-          className="h-full w-auto"
-        />
-      </span>
+      {text.map((word, i) => (
+        <span
+          key={word + i}
+          className={`text-[clamp(4rem,11vw,9rem)] font-medium leading-none tracking-[-0.02em] ${
+            i % 2 === 1 ? "text-cream/60" : ""
+          }`}
+        >
+          {word}
+        </span>
+      ))}
+      {logo && (
+        <span className="flex h-[clamp(3.5rem,9vw,7rem)] items-center text-[clamp(4rem,11vw,9rem)] font-medium leading-none tracking-[-0.02em]">
+          {logo}
+        </span>
+      )}
     </div>
   );
 }

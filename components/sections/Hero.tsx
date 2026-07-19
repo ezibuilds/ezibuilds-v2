@@ -27,11 +27,22 @@ export function Hero() {
       id="top"
       className="relative min-h-screen overflow-hidden bg-cream pt-28 sm:pt-32"
     >
-      {/* Works carousel band — horizontal scroll on touch, drag on desktop */}
+      {/* Studio headline */}
+      <div className="mx-auto max-w-[88rem] px-6 pb-8 sm:px-10">
+        <h1 className="text-[clamp(2.5rem,7.5vw,7rem)] font-medium leading-[0.95] tracking-[-0.03em]">
+          ezibuilds <span className="font-serif italic text-ink/70">studio</span>
+        </h1>
+        <p className="mt-3 max-w-2xl text-base text-muted sm:text-lg">
+          We design, build, and launch digital products that people love and
+          businesses scale on.
+        </p>
+      </div>
+
+      {/* Works carousel band */}
       <div
         data-cursor="drag"
         data-cursor-label="DRAG"
-        className="relative -mx-6 overflow-x-auto overflow-y-hidden px-6 pb-8 sm:-mx-10 sm:px-10 lg:overflow-hidden"
+        className="relative -mx-6 overflow-x-auto overflow-y-hidden px-6 pb-10 sm:-mx-10 sm:px-10 lg:overflow-hidden"
       >
         <div className="flex min-w-max gap-4 lg:hidden">
           {works.map((w) => (
@@ -39,17 +50,16 @@ export function Hero() {
           ))}
         </div>
 
-        {/* Desktop auto-scrolling carousel */}
         <CarouselDesktop />
       </div>
 
       {/* Studio intro */}
-      <div className="mx-auto max-w-[88rem] px-6 pb-16 sm:px-10">
+      <div className="mx-auto max-w-[88rem] px-6 pb-20 sm:px-10">
         <div ref={introRef} className="reveal-mask">
           <p className="text-[clamp(1.5rem,3.4vw,3.25rem)] font-medium leading-[1.1] tracking-tight">
-            The studio — we are a global creative tech studio forging delightful
-            experiences by blending design, technology, and storytelling. Driven to
-            create value for people and brands through interaction.
+            We are a global product studio designing, building, and launching
+            digital products that drive real business outcomes — from first
+            wireframe to scale.
           </p>
           <a
             href="#about"
@@ -73,46 +83,43 @@ function CarouselDesktop() {
     if (!track) return;
     if (window.matchMedia("(hover: none)").matches) return;
 
+    const SPEED = 0.6; // px per frame — constant auto-scroll
     let pos = 0;
-    let velocity = 0.6;
+    let offset = 0; // additional offset from drag
     let dragging = false;
     let startX = 0;
-    let startPos = 0;
-    let lastX = 0;
-    let lastT = 0;
+    let startOffset = 0;
     let raf = 0;
 
-    const animate = () => {
-      if (!dragging) pos -= velocity;
+    const step = () => {
+      if (!dragging) {
+        pos -= SPEED;
+      }
       const halfWidth = track.scrollWidth / 2;
+      // wrap when one full set has scrolled
       if (-pos >= halfWidth) pos += halfWidth;
-      track.style.transform = `translate3d(${pos}px,0,0)`;
-      raf = requestAnimationFrame(animate);
+      track.style.transform = `translate3d(${pos + offset}px,0,0)`;
+      raf = requestAnimationFrame(step);
     };
-    raf = requestAnimationFrame(animate);
+    raf = requestAnimationFrame(step);
 
     const onDown = (e: PointerEvent) => {
       dragging = true;
       startX = e.clientX;
-      startPos = pos;
-      lastX = e.clientX;
-      lastT = performance.now();
-      velocity = 0.6;
+      startOffset = offset;
       track.setPointerCapture(e.pointerId);
       document.body.style.userSelect = "none";
     };
     const onMove = (e: PointerEvent) => {
       if (!dragging) return;
-      const dx = e.clientX - startX;
-      pos = startPos + dx;
-      const now = performance.now();
-      const dt = Math.max(1, now - lastT);
-      velocity = ((e.clientX - lastX) / dt) * 14;
-      lastX = e.clientX;
-      lastT = now;
+      offset = startOffset + (e.clientX - startX);
     };
     const onUp = () => {
+      if (!dragging) return;
       dragging = false;
+      // bake the drag offset into the base pos so the loop continues smoothly
+      pos += offset;
+      offset = 0;
       document.body.style.userSelect = "";
     };
 
@@ -156,7 +163,6 @@ function WorkCard({ work }: { work: (typeof works)[number] }) {
       className="group relative flex h-[58vh] min-h-[420px] w-[68vw] max-w-[820px] flex-col justify-between overflow-hidden rounded-[28px] p-8 sm:p-10 lg:w-[58vw] lg:max-w-[760px]"
       style={{ background: work.accent, color: text }}
     >
-      {/* project client label */}
       <div className="flex items-start justify-between">
         <span className="text-xs uppercase tracking-[0.22em] opacity-80">
           {work.client}
@@ -176,14 +182,12 @@ function WorkCard({ work }: { work: (typeof works)[number] }) {
         </span>
       </div>
 
-      {/* big project name */}
       <div className="mt-auto">
         <h3 className="text-[clamp(2.5rem,7vw,6rem)] font-medium leading-[0.95] tracking-[-0.02em]">
           {work.client}
         </h3>
       </div>
 
-      {/* footer meta */}
       <div className="flex items-center justify-between text-xs uppercase tracking-[0.22em] opacity-80">
         <span>{work.year}</span>
         <span>{work.tags.slice(0, 2).join(" / ")}</span>

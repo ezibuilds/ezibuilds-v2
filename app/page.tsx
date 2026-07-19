@@ -1,10 +1,11 @@
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { Marquee } from "@/components/sections/Marquee";
 import { SelectedWork } from "@/components/sections/SelectedWork";
 import { Expertise } from "@/components/sections/Expertise";
-import { Awards } from "@/components/sections/Awards";
-import { TrustedBy } from "@/components/sections/TrustedBy";
+import { Projects } from "@/components/sections/Awards";
+import { WallOfLove } from "@/components/sections/WallOfLove";
 
 export default function Home() {
   return (
@@ -12,44 +13,17 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
-        <Marquee />
+        <Marquee text={["ezibuild", "design", "technology", "studio"]} />
         <SelectedWork />
-        <Marquee speed="slow" />
+        <Marquee
+          text={["design", "build", "launch", "scale"]}
+          speed="slow"
+        />
         <Expertise />
-        <Awards />
-        <TrustedBy />
-        <Footer />
+        <Projects />
+        <WallOfLove />
       </main>
+      <Footer />
     </>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="bg-cream px-6 py-12 sm:px-10">
-      <div className="mx-auto flex max-w-[88rem] flex-col gap-6 border-t border-line pt-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <span className="font-medium text-ink">Form&amp;Fun Studio</span>
-          <span>© {new Date().getFullYear()}</span>
-        </div>
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-          <a
-            href="https://www.formandfun.co/studio"
-            data-cursor="hover"
-            className="hover:text-ink"
-          >
-            Studio
-          </a>
-          <a
-            href="mailto:hello@formandfun.co"
-            data-cursor="hover"
-            className="hover:text-ink"
-          >
-            hello@formandfun.co
-          </a>
-          <span>Made with care</span>
-        </div>
-      </div>
-    </footer>
   );
 }
