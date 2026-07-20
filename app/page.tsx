@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { RouteTransition } from "@/components/ui/RouteTransition";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { Marquee } from "@/components/sections/Marquee";
@@ -10,13 +11,17 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main>
-        <Hero />
-        <Marquee text={["design", "build", "launch", "scale", "technology"]} />
-        <SelectedWork />
-        <Expertise />
-        <Testimonials />
-      </main>
+      <RouteTransition>
+        <main>
+          <Hero />
+          <Marquee
+            text={["design", "build", "launch", "scale", "technology"]}
+          />
+          <SelectedWork />
+          <Expertise />
+          <Testimonials />
+        </main>
+      </RouteTransition>
       <Footer />
     </>
   );

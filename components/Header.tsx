@@ -2,12 +2,21 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/cn";
+import { DURATION, EASE, fadeUp, stagger } from "@/lib/motion";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { Logo } from "@/components/ui/Logo";
 
+const NAV = [
+  { label: "Capabilities", href: "/#capabilities" },
+  { label: "Work", href: "/#work" },
+  { label: "Team", href: "/team" },
+];
+
 export function Header() {
   const [contactOpen, setContactOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -17,11 +26,26 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // The menu covers the page, so the body behind it must not scroll.
+  useEffect(() => {
+    if (!menuOpen) return;
+    window.__lenis?.stop();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenuOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.__lenis?.start();
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
   return (
     <>
       <header
+        // viewTransitionName keeps the header out of the directional route
+        // slide: it stays put as the fixed reference while content moves.
+        style={{ viewTransitionName: "site-header" }}
         className={cn(
-          "fixed inset-x-0 top-0 z-40 px-edge transition-all duration-300",
+          "intro intro-delay-1 fixed inset-x-0 top-0 z-40 px-edge transition-all duration-300",
           scrolled ? "pt-3" : "pt-5"
         )}
       >
@@ -40,7 +64,7 @@ export function Header() {
           <Link
             href="/"
             data-cursor="hover"
-            className="flex items-center gap-2.5 tracking-tight"
+            className="flex min-h-[44px] items-center gap-2.5 tracking-tight sm:min-h-0"
           >
             <Logo size={26} />
             <span className="flex items-baseline gap-1.5">
@@ -49,38 +73,101 @@ export function Header() {
             </span>
           </Link>
           <nav className="flex items-center gap-1 text-[14px] sm:gap-2">
-            <a
-              href="#capabilities"
-              data-cursor="hover"
-              className="hidden rounded-full px-4 py-2 transition-colors hover:bg-ink/5 sm:inline-block"
-            >
-              Capabilities
-            </a>
-            <a
-              href="#work"
-              data-cursor="hover"
-              className="rounded-full px-4 py-2 transition-colors hover:bg-ink/5"
-            >
-              Work
-            </a>
-            <Link
-              href="/team"
-              data-cursor="hover"
-              className="hidden rounded-full px-4 py-2 transition-colors hover:bg-ink/5 sm:inline-block"
-            >
-              Team
-            </Link>
+            {NAV.map(({ label, href }) => (
+              <Link
+                key={label}
+                href={href}
+                data-cursor="hover"
+                className="link-sweep hidden rounded-full px-4 py-2 transition-colors hover:bg-ink/5 sm:inline-block"
+              >
+                {label}
+              </Link>
+            ))}
             <button
               type="button"
               onClick={() => setContactOpen(true)}
               data-cursor="hover"
-              className="rounded-full bg-ink px-4 py-2 text-paper transition-colors hover:bg-ink-soft"
+              className="flex min-h-[44px] items-center rounded-full bg-ink px-4 text-paper transition-colors hover:bg-ink-soft sm:min-h-0 sm:py-2"
             >
               Contact
+            </button>
+            {/* Below sm the links above are hidden; without this the Team and
+                Capabilities pages have no reachable entry point on a phone. */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open menu"
+              aria-expanded={menuOpen}
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-colors hover:bg-ink/5 sm:hidden"
+            >
+              <span className="flex w-5 flex-col gap-[5px]">
+                <span className="h-px w-full bg-ink" />
+                <span className="h-px w-full bg-ink" />
+              </span>
             </button>
           </nav>
         </div>
       </header>
+
+      {/* AnimatePresence so the panel animates out as well. Without it the
+          close is an instant unmount, which reads as a glitch after a
+          deliberate opening slide. */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: DURATION.base, ease: EASE }}
+            className="fixed inset-0 z-50 flex flex-col bg-paper px-edge pt-5 sm:hidden"
+          >
+            <div className="flex items-center justify-between">
+              <Logo size={26} />
+              <button
+                type="button"
+                onClick={() => setMenuOpen(false)}
+                aria-label="Close menu"
+                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[15px]"
+              >
+                Close
+              </button>
+            </div>
+
+            {/* Links follow the panel in rather than arriving with it, so the
+                slide resolves before the eye has to read anything. */}
+            <motion.nav
+              variants={stagger(0.06, 0.18)}
+              initial="hidden"
+              animate="visible"
+              className="mt-12 flex flex-col"
+            >
+              {NAV.map(({ label, href }) => (
+                <motion.div key={label} variants={fadeUp}>
+                  <Link
+                    href={href}
+                    onClick={() => setMenuOpen(false)}
+                    className="link-sweep block border-b border-line py-5 text-display-md"
+                  >
+                    {label}
+                  </Link>
+                </motion.div>
+              ))}
+              <motion.div variants={fadeUp}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setContactOpen(true);
+                  }}
+                  className="w-full border-b border-line py-5 text-left text-display-md"
+                >
+                  Contact
+                </button>
+              </motion.div>
+            </motion.nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <ContactForm open={contactOpen} onClose={() => setContactOpen(false)} />
     </>

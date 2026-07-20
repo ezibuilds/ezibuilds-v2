@@ -2,30 +2,35 @@
 
 import { motion } from "framer-motion";
 import { testimonials } from "@/lib/data";
+import { DURATION, EASE, VIEWPORT, revealProps } from "@/lib/motion";
 
 export function Testimonials() {
   return (
     <section id="testimonials" className="bg-paper py-24 sm:py-32">
       <div className="px-edge">
-        <header className="mb-16 max-w-3xl">
+        <motion.header {...revealProps()} className="mb-16 max-w-3xl">
           <p className="mb-3 text-xs uppercase tracking-[0.22em] text-muted">
             Testimonials
           </p>
-          <h2 className="text-[clamp(2.5rem,6.5vw,6rem)] leading-[0.95] tracking-[-0.02em]">
+          <h2 className="text-[clamp(2rem,6.5vw,6rem)] leading-[0.95] tracking-[-0.02em]">
             What our partners
             <br />
             <span className="text-muted">say about us</span>
           </h2>
-        </header>
+        </motion.header>
 
         <ul className="divide-y divide-line border-t border-line">
           {testimonials.map((t, idx) => (
             <motion.li
               key={t.author}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: (idx % 4) * 0.05 }}
+              viewport={VIEWPORT}
+              transition={{
+                duration: DURATION.base,
+                ease: EASE,
+                delay: (idx % 4) * 0.06,
+              }}
               data-cursor="hover"
               className="group grid grid-cols-[3rem_1fr] gap-6 py-6 transition-colors hover:bg-ink/[0.03] sm:grid-cols-[4rem_1.4fr_2fr_auto] sm:gap-10 sm:py-8"
             >

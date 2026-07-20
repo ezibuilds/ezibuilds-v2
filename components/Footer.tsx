@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 
+// Root-relative, not bare hashes: the footer renders on /team and
+// /work/[slug] too, where "#work" would resolve to "/team#work".
 const MENU = [
-  { label: "Studio", href: "#capabilities" },
-  { label: "Contact", href: "#contact" },
-  { label: "Work", href: "#work" },
+  { label: "Studio", href: "/#capabilities" },
+  { label: "Work", href: "/#work" },
+  { label: "Testimonials", href: "/#testimonials" },
   { label: "Team", href: "/team" },
 ];
 
@@ -30,7 +32,7 @@ export function Footer() {
                 <Link
                   href={href}
                   data-cursor="hover"
-                  className="text-meta text-ink transition-colors break-words hover:text-muted"
+                  className="link-sweep inline-flex min-h-[44px] items-center text-meta text-ink transition-colors break-words hover:text-muted sm:min-h-0"
                 >
                   {label}
                 </Link>
@@ -46,7 +48,7 @@ export function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   data-cursor="hover"
-                  className="text-meta text-ink transition-colors break-words hover:text-muted"
+                  className="link-sweep inline-flex min-h-[44px] items-center text-meta text-ink transition-colors break-words hover:text-muted sm:min-h-0"
                 >
                   {label}
                 </a>
@@ -54,41 +56,25 @@ export function Footer() {
             ))}
           </Column>
 
-          <div className="space-y-6">
-            <Column title="Business enquiries">
-              <li>
-                <a
-                  href="mailto:hello@ezibuilds.studio"
-                  data-cursor="hover"
-                  className="text-meta text-ink transition-colors break-words hover:text-muted"
-                >
-                  hello@ezibuilds.studio
-                </a>
-              </li>
-            </Column>
-            <Column title="Join our team">
-              <li>
-                <a
-                  href="mailto:apply@ezibuilds.studio"
-                  data-cursor="hover"
-                  className="text-meta text-ink transition-colors break-words hover:text-muted"
-                >
-                  apply@ezibuilds.studio
-                </a>
-              </li>
-            </Column>
-          </div>
+          <Column title="Business enquiries">
+            <li>
+              <a
+                href="mailto:hello@ezibuilds.studio"
+                data-cursor="hover"
+                className="link-sweep inline-flex min-h-[44px] items-center text-meta text-ink transition-colors break-words hover:text-muted sm:min-h-0"
+              >
+                hello@ezibuilds.studio
+              </a>
+            </li>
+          </Column>
         </div>
       </div>
 
       {/* Full-bleed wordmark, cropped at the page edge */}
       <div className="mt-24 overflow-hidden" aria-hidden>
-        {/* Sized so the word *and* its trailing ™ clear the container. At
-            26vw the ™ pushed past the right edge and overflow-hidden cropped
-            it. Smaller on mobile, where the fixed gutter costs more width. */}
-        <span className="block whitespace-nowrap text-[23vw] leading-[0.78] tracking-[-0.04em] text-ink md:text-[25.5vw]">
+        {/* Smaller on mobile, where the fixed gutter costs more width. */}
+        <span className="block whitespace-nowrap text-[24.5vw] leading-[0.78] tracking-[-0.04em] text-ink md:text-[26.5vw]">
           ezibuilds
-          <sup className="align-super text-[0.18em] tracking-normal">™</sup>
         </span>
       </div>
     </footer>
@@ -105,7 +91,7 @@ function Column({
   return (
     <div>
       <p className="mb-3 text-meta text-muted">{title}</p>
-      <ul className="space-y-2">{children}</ul>
+      <ul className="space-y-0 sm:space-y-2">{children}</ul>
     </div>
   );
 }

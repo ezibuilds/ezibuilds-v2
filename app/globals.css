@@ -16,20 +16,24 @@
 
   /* Fluid type scale. The original is pure vw; clamp adds a mobile floor.
      Every weight on formandfun.co is 400; size and tracking carry the hierarchy. */
-  --text-display-xl: clamp(3rem, 7vw, 8rem);
+  /* Mobile floors are set from formandfun.co measured at 390px, where its
+     largest running heading is ~31px and section titles sit ~22-27px. The
+     previous floors (2rem lead, 1.75rem md) rendered noticeably heavier
+     than the reference on a phone. */
+  --text-display-xl: clamp(2.5rem, 7vw, 8rem);
   --text-display-xl--line-height: 0.9;
   --text-display-xl--letter-spacing: -0.029em;
 
-  --text-display-lg: clamp(2rem, 4.4vw, 5rem);
-  --text-display-lg--line-height: 1;
+  --text-display-lg: clamp(1.75rem, 4.4vw, 5rem);
+  --text-display-lg--line-height: 1.05;
   --text-display-lg--letter-spacing: -0.023em;
 
-  --text-display-md: clamp(1.75rem, 3.4vw, 3.75rem);
-  --text-display-md--line-height: 1;
+  --text-display-md: clamp(1.5rem, 3.4vw, 3.75rem);
+  --text-display-md--line-height: 1.05;
   --text-display-md--letter-spacing: -0.029em;
 
-  --text-display-sm: clamp(1.5rem, 2.4vw, 2.5rem);
-  --text-display-sm--line-height: 1;
+  --text-display-sm: clamp(1.25rem, 2.4vw, 2.5rem);
+  --text-display-sm--line-height: 1.1;
   --text-display-sm--letter-spacing: -0.02em;
 
   --text-lead: clamp(1rem, 1.5vw, 1.5rem);
@@ -49,6 +53,11 @@
 
   /* Page edge: media sits ~1vw from the viewport edge */
   --spacing-edge: 1vw;
+}
+
+:root {
+  /* Mirrors EASE in lib/motion.ts. Keep the two in sync. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html,
@@ -94,10 +103,11 @@ body {
 }
 
 /* Page edge: the original sits media ~1vw from the viewport edge, but
-   holds a fixed 1.25rem gutter on small screens where 1vw is only ~4px. */
+   holds a fixed gutter on small screens where 1vw is only ~4px. 1rem
+   matches the 16px inset measured on formandfun.co at 390px. */
 .px-edge {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 @media (min-width: 768px) {
@@ -127,22 +137,6 @@ body {
   will-change: transform;
 }
 
-/* Page-load reveal mask */
-.reveal-mask {
-  clip-path: inset(0 0 100% 0);
-  transition: clip-path 1.1s cubic-bezier(0.65, 0, 0.35, 1);
-}
-.reveal-mask.in-view {
-  clip-path: inset(0 0 0 0);
-}
-
-/* Carousel: prevent text selection while dragging */
-.dragging,
-.dragging * {
-  user-select: none;
-  -webkit-user-select: none;
-}
-
 .marquee-track {
   display: flex;
   width: max-content;
@@ -158,7 +152,7 @@ body {
    carousel rises from below. Driven by .fonts-ready on <html>. */
 .hero-stage {
   height: 100svh;
-  transition: height 1s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: height 1s var(--ease-out);
 }
 .fonts-ready .hero-stage {
   height: var(--hero-collapsed, 62svh);
@@ -168,7 +162,7 @@ body {
   transform: translate3d(0, 18vh, 0);
   opacity: 0;
   transition:
-    transform 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1.1s var(--ease-out),
     opacity 0.8s ease-out;
   transition-delay: 0.15s;
 }
@@ -177,14 +171,182 @@ body {
   opacity: 1;
 }
 
+/* ---------------------------------------------------------------------------
+   Intro sequence
+
+   The wordmark is the loading state, so it fades in on its own the moment the
+   document paints. Everything else waits for .fonts-ready and arrives in
+   order: chrome, then the carousel that hero-rise already handles.
+   --------------------------------------------------------------------------- */
+@keyframes intro-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.intro-mark {
+  animation: intro-in 1s var(--ease-out) both;
+}
+
+/* An animation, not a transition. These elements already run their own
+   `transition-all` for scroll state, and a second transition on the same
+   element would clobber it. */
+.intro {
+  opacity: 0;
+}
+.fonts-ready .intro {
+  animation: intro-in 0.7s var(--ease-out) both;
+}
+.fonts-ready .intro-delay-1 {
+  animation-delay: 0.06s;
+}
+.fonts-ready .intro-delay-2 {
+  animation-delay: 0.14s;
+}
+
+/* ---------------------------------------------------------------------------
+   Link underline sweep
+
+   Wipes in from the left and out to the right, so the line follows the
+   direction of reading rather than retracing itself.
+   --------------------------------------------------------------------------- */
+.link-sweep {
+  position: relative;
+}
+.link-sweep::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.08em;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.4s var(--ease-out);
+}
+.link-sweep:hover::after,
+.link-sweep:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* ---------------------------------------------------------------------------
+   Route transitions
+   --------------------------------------------------------------------------- */
+
+/* Soften the shared-element morph: blur mid-flight hides the pixel
+   interpolation between two differently-sized accent panels. */
+::view-transition-group(.morph) {
+  animation-duration: 420ms;
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: via-blur;
+}
+@keyframes via-blur {
+  30% {
+    filter: blur(4px);
+  }
+}
+
+::view-transition-old(.nav-forward) {
+  --slide-offset: -60px;
+  animation:
+    150ms ease-in both vt-fade reverse,
+    400ms var(--ease-out) both vt-slide reverse;
+}
+::view-transition-new(.nav-forward) {
+  --slide-offset: 60px;
+  animation:
+    210ms ease-out 150ms both vt-fade,
+    400ms var(--ease-out) both vt-slide;
+}
+::view-transition-old(.nav-back) {
+  --slide-offset: 60px;
+  animation:
+    150ms ease-in both vt-fade reverse,
+    400ms var(--ease-out) both vt-slide reverse;
+}
+::view-transition-new(.nav-back) {
+  --slide-offset: -60px;
+  animation:
+    210ms ease-out 150ms both vt-fade,
+    400ms var(--ease-out) both vt-slide;
+}
+
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+@keyframes vt-slide {
+  from {
+    translate: var(--slide-offset);
+  }
+  to {
+    translate: 0;
+  }
+}
+
+/* The header is the user's fixed spatial anchor: it must not slide with the
+   content. display:none on the old snapshot avoids a double-header flash. */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion
+
+   Positional movement is the main trigger for motion sensitivity, so all of it
+   is removed. Framer Motion is handled separately by MotionConfig
+   reducedMotion="user", which keeps opacity fades and drops transforms.
+   --------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   .hero-stage,
-  .hero-rise,
-  .reveal-mask {
+  .hero-rise {
     transition: none;
   }
   .hero-rise {
     transform: none;
     opacity: 1;
+  }
+  .intro,
+  .fonts-ready .intro {
+    opacity: 1;
+    animation: none;
+  }
+  .intro-mark {
+    animation: none;
+  }
+  .link-sweep::after {
+    transition: none;
+  }
+  .animate-marquee,
+  .animate-marquee-slow {
+    animation: none;
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
   }
 }

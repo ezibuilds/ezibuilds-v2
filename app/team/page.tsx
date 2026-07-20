@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { RouteTransition } from "@/components/ui/RouteTransition";
 import { Team } from "@/components/sections/Team";
 import { Footer } from "@/components/Footer";
 
@@ -12,9 +13,11 @@ export default function TeamPage() {
   return (
     <>
       <Header />
-      <main className="pt-28 sm:pt-32">
-        <Team />
-      </main>
+      <RouteTransition>
+        <main className="pt-28 sm:pt-32">
+          <Team />
+        </main>
+      </RouteTransition>
       <Footer />
     </>
   );

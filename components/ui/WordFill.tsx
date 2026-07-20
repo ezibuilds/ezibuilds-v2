@@ -41,11 +41,13 @@ export function WordFill({ text, className = "", children }: Props) {
           stagger: 0.5,
           scrollTrigger: {
             trigger: el,
-            start: "top 80%",
-            // Fixed range rather than the block's own height, so a short
-            // paragraph doesn't finish filling within a flick of the wheel.
-            end: "+=80%",
-            scrub: 0.6,
+            start: "top 85%",
+            // Keyed to viewport position, not the block's own height: a short
+            // paragraph shouldn't fill within a flick of the wheel, and a tall
+            // one shouldn't still be filling as it leaves. Ending at 40% puts
+            // the last word in ink while the block sits mid-screen.
+            end: "top 40%",
+            scrub: 0.5,
           },
         }
       );

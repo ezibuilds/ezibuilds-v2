@@ -24,7 +24,7 @@ export const works: Work[] = [
     slug: "wacrm",
     client: "WaCRM",
     title: "WaCRM",
-    category: "SaaS Platform",
+    category: "WhatsApp CRM",
     tags: ["DESIGN", "BUILD", "SAAS"],
     year: "2025",
     accent: "#C5CEF0",
@@ -35,7 +35,7 @@ export const works: Work[] = [
     slug: "hostelgo",
     client: "HostelGo",
     title: "HostelGo",
-    category: "Marketplace",
+    category: "Transit App",
     tags: ["DESIGN", "BUILD", "MOBILE"],
     year: "2025",
     accent: "#F5D9A8",
@@ -46,7 +46,7 @@ export const works: Work[] = [
     slug: "fraudex",
     client: "FraudEx",
     title: "FraudEx",
-    category: "AI Security",
+    category: "Fraud Detection",
     tags: ["BUILD", "AI", "SAAS"],
     year: "2025",
     accent: "#A9E5E3",
@@ -57,8 +57,8 @@ export const works: Work[] = [
     slug: "jobezi",
     client: "JobEzi",
     title: "JobEzi",
-    category: "Mobile App",
-    tags: ["DESIGN", "BUILD", "MOBILE"],
+    category: "Talent Marketplace",
+    tags: ["DESIGN", "BUILD", "SAAS"],
     year: "2025",
     accent: "#DDB3E9",
     textColor: "#1d1d1d",
@@ -68,8 +68,8 @@ export const works: Work[] = [
     slug: "tambolens",
     client: "Tambolens",
     title: "Tambolens",
-    category: "D2C Commerce",
-    tags: ["DESIGN", "BUILD"],
+    category: "Analytics Platform",
+    tags: ["DESIGN", "BUILD", "AI"],
     year: "2024",
     accent: "#AFD9A4",
     textColor: "#1d1d1d",
@@ -79,8 +79,8 @@ export const works: Work[] = [
     slug: "assetflow",
     client: "AssetFlow",
     title: "AssetFlow",
-    category: "Fintech Dashboard",
-    tags: ["DESIGN", "SAAS"],
+    category: "Asset Management",
+    tags: ["DESIGN", "BUILD", "SAAS"],
     year: "2024",
     accent: "#CFE0F2",
     textColor: "#1d1d1d",
@@ -293,122 +293,123 @@ export type WorkDetail = {
 /**
  * Long-form content for /work/[slug], keyed by Work.slug.
  *
- * PLACEHOLDER COPY: the structure is real, the words are not. Every `summary`
- * and `body` below needs replacing with the actual project story. Deliberately
- * free of invented metrics so nothing reads as a fabricated result claim.
+ * Lengths are tuned to the rendered layout: `summary` sits in display type at
+ * ~29 characters per line, so it is kept under ~85 to stay within three lines;
+ * `sections[].body` runs ~72 characters per line and is kept under ~190 so it
+ * holds to three lines on desktop and four on mobile.
  */
 export const workDetails: Record<string, WorkDetail> = {
   wacrm: {
     summary:
-      "A customer operations platform rebuilt around the way sales teams actually work.",
-    services: ["UX Research", "Product Design", "Design System", "Web App"],
+      "Salon booking, payments, and analytics running on one WhatsApp number.",
+    services: ["WhatsApp CRM", "Booking System", "Payments", "Owner Dashboard"],
     sections: [
       {
         title: "Challenge",
-        body: "Describe the problem the client arrived with, the constraints on the engagement, and what success needed to look like.",
+        body: "Indian salons run on phone calls and paper diaries. Missed calls cost bookings, no-shows went unpunished, and owners had no view of revenue or barber performance.",
       },
       {
         title: "Approach",
-        body: "Describe how the work was scoped and run: the research, the decisions that shaped the product, and why they were made.",
+        body: "We extended WaCRM into a vertical salon SaaS. The flows engine already handled WhatsApp, so the work went into the booking model, slot concurrency, payments, and the owner console.",
       },
       {
         title: "Outcome",
-        body: "Describe what shipped and what changed for the business afterwards. Replace with real, verifiable results.",
+        body: "Customers book, reschedule, and cancel in chat. Barbers manage check-ins and queues. Owners get analytics, waitlists, GST invoicing, and automated reminders.",
       },
     ],
   },
   hostelgo: {
     summary:
-      "A booking marketplace reimagined for travellers who plan on the move.",
-    services: ["Product Design", "Mobile App", "Web Development", "Brand"],
+      "Live shuttle tracking for students, drivers, and admins in one app.",
+    services: ["Mobile App", "Live Tracking", "QR Boarding", "Admin Dashboard"],
     sections: [
       {
         title: "Challenge",
-        body: "Describe the problem the client arrived with, the constraints on the engagement, and what success needed to look like.",
+        body: "Campus shuttles run on guesswork. Students wait without knowing when a van arrives, drivers cannot see who is waiting, and admins have no data on fleet use.",
       },
       {
         title: "Approach",
-        body: "Describe how the work was scoped and run: the research, the decisions that shaped the product, and why they were made.",
+        body: "A React Native app with three role-specific interfaces over WebSockets. Students mark themselves ready and scan a QR to board, drivers work a live queue, admins manage trips and fleet.",
       },
       {
         title: "Outcome",
-        body: "Describe what shipped and what changed for the business afterwards. Replace with real, verifiable results.",
+        body: "Live queue visibility, QR boarding, van tracking on a map, and an admin dashboard with audit logs, all kept in sync by WebSocket events.",
       },
     ],
   },
   fraudex: {
     summary:
-      "Real-time risk scoring that gives analysts a reason for every decision.",
-    services: ["AI Solutions", "Dashboard Design", "Web App", "Integrations"],
+      "Explainable fraud detection that shows why a transaction was flagged.",
+    services: ["FastAPI Backend", "Anomaly Detection", "Data Visualization"],
     sections: [
       {
         title: "Challenge",
-        body: "Describe the problem the client arrived with, the constraints on the engagement, and what success needed to look like.",
+        body: "Auditing financial records is manual and reactive. Suspicious rows hide inside thousands of transactions, and most tools flag them without explaining why.",
       },
       {
         title: "Approach",
-        body: "Describe how the work was scoped and run: the research, the decisions that shaped the product, and why they were made.",
+        body: "A Next.js frontend over a Python FastAPI backend running Benford's Law, Z-score and IQR outliers, vendor concentration, round-number and duplicate checks. Every flag carries its reason.",
       },
       {
         title: "Outcome",
-        body: "Describe what shipped and what changed for the business afterwards. Replace with real, verifiable results.",
+        body: "Upload a CSV and get a risk score, flagged transactions, a Benford's Law chart, and a plain explanation in under two minutes. It informs auditors rather than accusing.",
       },
     ],
   },
   jobezi: {
     summary:
-      "A jobs marketplace built mobile-first for candidates who apply between shifts.",
-    services: ["UX Research", "Mobile App Design", "App Development", "Growth"],
+      "A talent marketplace where recruiters pay only for accepted intros.",
+    services: ["Web App", "Supabase Auth", "Assessments", "Credit Billing"],
     sections: [
       {
         title: "Challenge",
-        body: "Describe the problem the client arrived with, the constraints on the engagement, and what success needed to look like.",
+        body: "Recruiters drown in unvetted applicants. Candidates are tired of being spammed and cannot signal interest without exposing who they are. Neither side has trust signals.",
       },
       {
         title: "Approach",
-        body: "Describe how the work was scoped and run: the research, the decisions that shaped the product, and why they were made.",
+        body: "Candidates stay redacted until they accept an intro. Ranking uses verifiable signals: GitHub activity, timed assessments, responsiveness. Recruiters pay per accepted intro.",
       },
       {
         title: "Outcome",
-        body: "Describe what shipped and what changed for the business afterwards. Replace with real, verifiable results.",
+        body: "Ranked shortlists, salary-band matching, credit holds on sends, and details revealed only on accept. Assessments give percentile badges and every credit move is audited.",
       },
     ],
   },
   tambolens: {
     summary:
-      "A direct-to-consumer storefront where the product photography does the selling.",
-    services: ["Brand Identity", "Shopify Development", "Creative", "CRO"],
+      "Explore your database in plain language, with charts built on the fly.",
+    services: ["Product Design", "Next.js Frontend", "MCP Integration", "Tambo SDK"],
     sections: [
       {
         title: "Challenge",
-        body: "Describe the problem the client arrived with, the constraints on the engagement, and what success needed to look like.",
+        body: "Business data sits in databases, but getting insight needs SQL and BI expertise. AI chat tools lack structured access and cannot hold UI state, so analysts become the bottleneck.",
       },
       {
         title: "Approach",
-        body: "Describe how the work was scoped and run: the research, the decisions that shaped the product, and why they were made.",
+        body: "A plug-and-play layer over existing databases: MCP servers guard query execution and the Tambo SDK renders generative UI. Connect a database, authorise tables, then ask questions.",
       },
       {
         title: "Outcome",
-        body: "Describe what shipped and what changed for the business afterwards. Replace with real, verifiable results.",
+        body: "Postgres, MySQL, and MongoDB support with encrypted credentials, schema-aware permissions, guarded querying, and saved dashboards. No migration and no SQL required.",
       },
     ],
   },
   assetflow: {
     summary:
-      "A finance dashboard that turns portfolio data into decisions, not spreadsheets.",
-    services: ["Product Design", "Design System", "Web App", "Data Viz"],
+      "Asset tracking, allocation, and maintenance on one structured lifecycle.",
+    services: ["Web App", "PostgreSQL", "Role-based Access", "Reporting"],
     sections: [
       {
         title: "Challenge",
-        body: "Describe the problem the client arrived with, the constraints on the engagement, and what success needed to look like.",
+        body: "Organisations still track assets on spreadsheets and paper. Nobody can see who holds what, what condition it is in, or what is overdue, so conflicts surface too late.",
       },
       {
         title: "Approach",
-        body: "Describe how the work was scoped and run: the research, the decisions that shaped the product, and why they were made.",
+        body: "A greenfield Next.js app on Prisma and PostgreSQL covering the full lifecycle: registration, allocation with conflict detection, transfers, booking, and maintenance approval.",
       },
       {
         title: "Outcome",
-        body: "Describe what shipped and what changed for the business afterwards. Replace with real, verifiable results.",
+        body: "Role-based dashboards, calendar booking, maintenance workflows, audit cycles, and exportable reports, each scoped to Admin, Manager, Department Head, or Employee.",
       },
     ],
   },

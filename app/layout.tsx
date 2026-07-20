@@ -4,6 +4,7 @@ import "./globals.css";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { FontsReady } from "@/components/ui/FontsReady";
+import { NavHistory } from "@/components/ui/NavHistory";
 
 const switzer = localFont({
   src: "./fonts/Switzer-Variable.woff2",
@@ -27,6 +28,7 @@ export default function RootLayout({
     <html lang="en" className={switzer.variable}>
       <body className="min-h-screen bg-paper text-ink font-sans antialiased">
         <FontsReady />
+        <NavHistory />
         <SmoothScroll>
           <CustomCursor />
           {children}
