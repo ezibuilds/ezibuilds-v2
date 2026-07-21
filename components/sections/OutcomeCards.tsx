@@ -36,9 +36,6 @@ export function OutcomeCards() {
           </h2>
         </motion.header>
 
-        {/* Bento-ish grid: two larger cards anchor the layout, the rest fill a
-            three-up row beneath so the section reads as a single visual block
-            rather than a uniform list. */}
         <motion.ul
           variants={stagger(0.08)}
           initial="hidden"
@@ -46,21 +43,17 @@ export function OutcomeCards() {
           viewport={VIEWPORT}
           className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {products.map((p, i) => {
+          {products.map((p) => {
             const fill = CARD_FILLS[p.group] ?? CARD_FILLS.product;
-            // The first card gets to be a feature on lg; the launch card sits
-            // dark so it breaks the row rhythm intentionally.
-            const span = i === 0 ? "lg:col-span-2 lg:row-span-2" : "";
-            const tall = i === 0 ? "lg:aspect-auto lg:min-h-[520px]" : "";
             return (
-              <motion.li key={p.slug} variants={fadeUp} className={span}>
+              <motion.li key={p.slug} variants={fadeUp}>
                 <Card
                   name={p.name}
                   tagline={p.tagline}
                   description={p.description}
                   bg={fill.bg}
                   text={fill.text}
-                  className={cn("h-full", tall)}
+                  className="h-full"
                 />
               </motion.li>
             );
