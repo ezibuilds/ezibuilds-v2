@@ -38,7 +38,7 @@ export function Hero() {
             size the copy fills the measure at every breakpoint, so an inline
             pill always wrapped onto a line of its own and read as detached. */}
         <a
-          href="#capabilities"
+          href="#build"
           data-cursor="hover"
           className="group mt-8 inline-flex min-h-[44px] items-center gap-2 rounded-pill bg-ink px-5 text-meta text-paper transition-colors hover:bg-ink-soft sm:min-h-0 sm:py-2.5"
         >

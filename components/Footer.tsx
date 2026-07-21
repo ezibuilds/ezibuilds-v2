@@ -4,8 +4,8 @@ import { Logo } from "@/components/ui/Logo";
 // Root-relative, not bare hashes: the footer renders on /team and
 // /work/[slug] too, where "#work" would resolve to "/team#work".
 const MENU = [
-  { label: "Studio", href: "/#capabilities" },
-  { label: "Work", href: "/#work" },
+  { label: "Build", href: "/#build" },
+  { label: "Offers", href: "/#offers" },
   { label: "Testimonials", href: "/#testimonials" },
   { label: "Team", href: "/team" },
 ];

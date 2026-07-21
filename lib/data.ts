@@ -192,6 +192,227 @@ export const capabilities: CapabilityCategory[] = [
   },
 ];
 
+export type Product = {
+  slug: string;
+  name: string;
+  tagline: string;
+  description: string;
+  /** One of: product, ai, saas, mobile, web, launch, growth. */
+  group:
+    | "product"
+    | "ai"
+    | "saas"
+    | "mobile"
+    | "web"
+    | "launch"
+    | "growth";
+};
+
+export const products: Product[] = [
+  {
+    slug: "product-design",
+    name: "Product Design",
+    tagline: "Interfaces people love using.",
+    description:
+      "End-to-end product design: research, flows, UI, prototypes, and design systems handed off to engineering.",
+    group: "product",
+  },
+  {
+    slug: "ai-products",
+    name: "AI Products",
+    tagline: "AI-native applications.",
+    description:
+      "Design and build AI products: chat, agents, copilots, retrieval pipelines, and the UX that makes them usable.",
+    group: "ai",
+  },
+  {
+    slug: "saas",
+    name: "SaaS",
+    tagline: "Multi-tenant SaaS platforms.",
+    description:
+      "Design and engineer SaaS products: auth, billing, dashboards, roles, and the infrastructure that scales with them.",
+    group: "saas",
+  },
+  {
+    slug: "mobile-apps",
+    name: "Mobile Apps",
+    tagline: "Native-feeling mobile products.",
+    description:
+      "iOS and Android apps with the polish of native: gestures, motion, offline behaviour, and release-ready builds.",
+    group: "mobile",
+  },
+  {
+    slug: "websites",
+    name: "Websites",
+    tagline: "Marketing sites that convert.",
+    description:
+      "Performance-first websites with motion, CMS integrations, and the analytics wiring to learn from every visitor.",
+    group: "web",
+  },
+  {
+    slug: "launch-systems",
+    name: "Launch Systems",
+    tagline: "Creative that ships the product.",
+    description:
+      "Launch creative in one motion system: product video, motion graphics, AI-generated visuals, and social cuts.",
+    group: "launch",
+  },
+  {
+    slug: "growth",
+    name: "Growth",
+    tagline: "Funnels that compound.",
+    description:
+      "Performance, lifecycle, and CRO work tied to the same product metrics engineering ships against.",
+    group: "growth",
+  },
+];
+
+export type Offer = {
+  slug: string;
+  name: string;
+  tagline: string;
+  description: string;
+  includes: string[];
+  cta: string;
+  /** Card fill colour, in the pastel vocabulary used across the site. */
+  accent: string;
+  textColor?: string;
+};
+
+export const offers: Offer[] = [
+  {
+    slug: "product-partnership",
+    name: "Product Partnership",
+    tagline: "Long-term design and engineering for ambitious teams.",
+    description:
+      "For startups that need an embedded product team. We design, build, and ship with you, week after week.",
+    includes: [
+      "Product Design",
+      "Web & Mobile Engineering",
+      "AI Features",
+      "Weekly Working Calls",
+      "Shared Slack Channel",
+      "Sprint Planning",
+      "Unlimited Iterations",
+    ],
+    cta: "Become a Product Partner",
+    accent: "#C5CEF0",
+  },
+  {
+    slug: "fixed-scope",
+    name: "Fixed Scope",
+    tagline: "A defined build, delivered on time.",
+    description:
+      "For launches that need a website, MVP, or app shipped to a deadline. Scoped up front, fixed price, supported after launch.",
+    includes: [
+      "Website",
+      "SaaS MVP",
+      "Mobile App",
+      "Product Design",
+      "AI Integrations",
+      "14 Days Post-launch Support",
+    ],
+    cta: "Start Your Project",
+    accent: "#1d1d1d",
+    textColor: "#ffffff",
+  },
+  {
+    slug: "growth-partnership",
+    name: "Growth Partnership",
+    tagline: "Creative and growth for products already live.",
+    description:
+      "For products that shipped and need to compound. We run creative, performance, and CRO against the same funnel.",
+    includes: [
+      "Product & Launch Video",
+      "AI Creative",
+      "Performance Marketing",
+      "Analytics",
+      "Conversion Rate Optimisation",
+      "Monthly Reporting",
+    ],
+    cta: "Let's Scale",
+    accent: "#AFD9A4",
+  },
+];
+
+export type ProcessStep = {
+  number: string;
+  title: string;
+  description: string;
+  /** Optional label below the description, e.g. the artefact produced. */
+  output: string;
+};
+
+export const processSteps: ProcessStep[] = [
+  {
+    number: "01",
+    title: "Discovery",
+    description:
+      "We start with the problem, not the solution. Calls, audits, and a shared brief that everyone signs up to.",
+    output: "Brief & success metrics",
+  },
+  {
+    number: "02",
+    title: "Research",
+    description:
+      "User interviews, competitor teardowns, and a positioning pass. The work that prevents six months of guesswork.",
+    output: "Research report",
+  },
+  {
+    number: "03",
+    title: "Design",
+    description:
+      "Wireframes, prototypes, and a design system your engineering team can build against without translation.",
+    output: "Figma & design system",
+  },
+  {
+    number: "04",
+    title: "Build",
+    description:
+      "Engineering in sprints, with weekly demos and a shared backlog. Ship to staging every Friday.",
+    output: "Production-ready code",
+  },
+  {
+    number: "05",
+    title: "Launch",
+    description:
+      "Launch creative, landing pages, and the analytics wiring to know what happens in week one, not month three.",
+    output: "Launch kit & site",
+  },
+  {
+    number: "06",
+    title: "Scale",
+    description:
+      "We stay on to iterate on what the data shows. New features, growth experiments, and the next version of the brief.",
+    output: "Roadmap & experiments",
+  },
+];
+
+export type Founder = {
+  name: string;
+  role: string;
+  bio: string;
+  mission: string;
+  story: string;
+  links: { label: string; href: string }[];
+};
+
+export const founder: Founder = {
+  name: "Jay Sathwara",
+  role: "Founder, ezibuilds",
+  bio: "Designer and engineer building the studio I wished existed when I shipped my first product.",
+  mission:
+    "Build a studio that designs, ships, and launches like a product company — not an agency.",
+  story:
+    "ezibuilds started as a one-person studio taking on product design and engineering work for founders who needed a partner, not a vendor. The team grew, the framework stayed the same: design, build, launch, and scale — owned end to end by the same small team, with the same accountability for outcomes.",
+  links: [
+    { label: "LinkedIn", href: "https://linkedin.com" },
+    { label: "Twitter", href: "https://twitter.com" },
+    { label: "YouTube", href: "https://youtube.com" },
+    { label: "Newsletter", href: "https://newsletter.ezibuilds.studio" },
+  ],
+};
+
 export type Testimonial = {
   quote: string;
   author: string;

@@ -9,8 +9,8 @@ import { ContactForm } from "@/components/sections/ContactForm";
 import { Logo } from "@/components/ui/Logo";
 
 const NAV = [
-  { label: "Capabilities", href: "/#capabilities" },
-  { label: "Work", href: "/#work" },
+  { label: "Build", href: "/#build" },
+  { label: "Offers", href: "/#offers" },
   { label: "Team", href: "/team" },
 ];
 
