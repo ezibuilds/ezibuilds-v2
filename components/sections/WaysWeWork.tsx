@@ -74,7 +74,7 @@ function OfferCard({
   return (
     <article
       style={{ background: offer.accent, color: text }}
-      className="flex w-full flex-col rounded-[28px] p-7 sm:p-9"
+      className="flex w-full flex-col rounded-card p-7 sm:p-9"
     >
       <h3 className="text-[clamp(1.5rem,2.6vw,2.5rem)] leading-[1.05] tracking-[-0.02em]">
         {offer.name}

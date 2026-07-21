@@ -197,15 +197,13 @@ export type Product = {
   name: string;
   tagline: string;
   description: string;
-  /** One of: product, ai, saas, mobile, web, launch, growth. */
+  /** One of: product, saas, mobile, web, launch. */
   group:
     | "product"
-    | "ai"
     | "saas"
     | "mobile"
     | "web"
-    | "launch"
-    | "growth";
+    | "launch";
 };
 
 export const products: Product[] = [
@@ -216,14 +214,6 @@ export const products: Product[] = [
     description:
       "End-to-end product design: research, flows, UI, prototypes, and design systems handed off to engineering.",
     group: "product",
-  },
-  {
-    slug: "ai-products",
-    name: "AI Products",
-    tagline: "AI-native applications.",
-    description:
-      "Design and build AI products: chat, agents, copilots, retrieval pipelines, and the UX that makes them usable.",
-    group: "ai",
   },
   {
     slug: "saas",
@@ -256,14 +246,6 @@ export const products: Product[] = [
     description:
       "Launch creative in one motion system: product video, motion graphics, AI-generated visuals, and social cuts.",
     group: "launch",
-  },
-  {
-    slug: "growth",
-    name: "Growth",
-    tagline: "Funnels that compound.",
-    description:
-      "Performance, lifecycle, and CRO work tied to the same product metrics engineering ships against.",
-    group: "growth",
   },
 ];
 

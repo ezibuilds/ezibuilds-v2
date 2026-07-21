@@ -11,3 +11,6 @@
 
 # design-content
 - Use checklists with checkmarks (✓) rather than pills/chips for listing services or what's included in offer cards — checklists reduce buyer anxiety by answering "What do I get?" and are faster to scan. Confidence: 0.70
+
+# workflow
+- Run `npm install --include=dev` when installing new packages, because the project's npm config has `omit=dev` which skips devDependencies by default. Confidence: 0.70

@@ -1,38 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { ContactForm } from "@/components/sections/ContactForm";
+import Cal, { getCalApi } from "@calcom/embed-react";
 import { VIEWPORT, fadeUp, stagger } from "@/lib/motion";
 
 /**
- * Final CTA panel. Dark background and oversized type so it lands as a
- * deliberate ending to the page rather than a thin strip above the footer.
+ * Final CTA panel — two-column on lg: headline, channels, and the email
+ * escape hatch on the left, Cal.com inline embed on the right.
  *
- * Headline is hand-split across lines so the big word ("remembering") gets
- * its own block; the inline list of contact channels keeps the panel useful
- * for visitors who don't want to fill a form.
+ * The embed is configured for "month_view" so the calendar picker fills
+ * the column. On mobile it collapses below the copy — `min-h` on the
+ * wrapper keeps the embed from collapsing to a sliver before its iframe
+ * loads, and `aspect-square sm:aspect-auto sm:min-h-[640px]` gives the
+ * embed a sensible height across breakpoints.
  */
 export function FinalCTA() {
-  const [contactOpen, setContactOpen] = useState(false);
+  useEffect(() => {
+    // Configure Cal.com UI once on mount. getCalApi returns a promise; we
+    // await it inside the effect so we don't block render.
+    (async () => {
+      const cal = await getCalApi({ namespace: "client-meeting" });
+      cal("ui", {
+        hideEventTypeDetails: false,
+        layout: "month_view",
+        theme: "auto",
+      });
+    })();
+  }, []);
 
   return (
-    <>
-      <section
-        id="contact"
-        className="bg-ink px-edge py-32 text-paper sm:py-40"
-      >
+    <section
+      id="contact"
+      className="bg-ink px-edge py-24 text-paper sm:py-32"
+    >
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
         <motion.div
           variants={stagger(0.1)}
           initial="hidden"
           whileInView="visible"
           viewport={VIEWPORT}
-          className="mx-auto max-w-6xl"
+          className="flex flex-col"
         >
-          <motion.p
-            variants={fadeUp}
-            className="mb-6 text-meta text-paper/60"
-          >
+          <motion.p variants={fadeUp} className="mb-6 text-meta text-paper/60">
             Let&apos;s talk
           </motion.p>
 
@@ -49,18 +59,8 @@ export function FinalCTA() {
 
           <motion.div
             variants={fadeUp}
-            className="mt-14 flex flex-wrap items-center gap-4"
+            className="mt-10 flex flex-wrap items-center gap-4"
           >
-            <button
-              type="button"
-              onClick={() => setContactOpen(true)}
-              data-cursor="hover"
-              className="inline-flex min-h-[44px] items-center gap-2 rounded-pill bg-paper px-6 text-meta text-ink transition-colors hover:bg-paper/90 sm:min-h-0 sm:py-3"
-            >
-              Book a strategy call
-              <Arrow />
-            </button>
-
             <a
               href="mailto:hello@ezibuilds.studio"
               data-cursor="hover"
@@ -70,12 +70,13 @@ export function FinalCTA() {
             </a>
           </motion.div>
 
-          {/* Channels row. Acts as the secondary proof point — a small cluster
-              of social links that mirrors the Footer so the final panel does
-              not feel like an information dead end. */}
+          {/* Channels grid. Mirrors the Footer so the panel never feels like
+              an information dead end. mt-auto pins it to the bottom of the
+              left column so its position stays consistent regardless of the
+              embed's rendered height. */}
           <motion.ul
             variants={fadeUp}
-            className="mt-16 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-paper/15 pt-10 sm:grid-cols-4"
+            className="mt-12 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-paper/15 pt-10 sm:grid-cols-2 lg:mt-auto"
           >
             {CHANNELS.map((c) => (
               <li key={c.label}>
@@ -97,10 +98,25 @@ export function FinalCTA() {
             ))}
           </motion.ul>
         </motion.div>
-      </section>
 
-      <ContactForm open={contactOpen} onClose={() => setContactOpen(false)} />
-    </>
+        {/* The embed wrapper. bg-paper gives the Cal.com UI (which is light
+            by default in auto theme) a solid background so it does not bleed
+            into the surrounding ink section. rounded-card matches the design
+            language used elsewhere on the site. */}
+        <div className="min-h-140 overflow-hidden rounded-card bg-paper text-ink aspect-square sm:aspect-auto sm:min-h-160">
+          <Cal
+            namespace="client-meeting"
+            calLink="ezibuilds/client-meeting"
+            style={{ width: "100%", height: "100%", overflow: "scroll" }}
+            config={{
+              layout: "month_view",
+              useSlotsViewOnSmallScreen: "true",
+              theme: "light",
+            }}
+          />
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -110,17 +126,3 @@ const CHANNELS = [
   { label: "LinkedIn", value: "ezibuilds studio", href: "https://linkedin.com" },
   { label: "X", value: "@ezibuilds", href: "https://twitter.com" },
 ];
-
-function Arrow() {
-  return (
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>
-      <path
-        d="M1 5h8m0 0L5 1m4 4L5 9"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}

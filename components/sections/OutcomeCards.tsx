@@ -5,20 +5,13 @@ import { products } from "@/lib/data";
 import { cn } from "@/lib/cn";
 import { VIEWPORT, fadeUp, stagger, revealProps } from "@/lib/motion";
 
-/**
- * Pastel fills used across the site, picked from the existing works palette so
- * the outcome cards feel like part of the same visual vocabulary rather than
- * a new colour system bolted on. `dark` is for cards that need higher contrast
- * against the otherwise light card grid.
- */
+/** Pastel card fills drawn from the existing works palette. */
 const CARD_FILLS: Record<string, { bg: string; text: string }> = {
   product: { bg: "#C5CEF0", text: "#1d1d1d" },
-  ai: { bg: "#DDB3E9", text: "#1d1d1d" },
   saas: { bg: "#A9E5E3", text: "#1d1d1d" },
   mobile: { bg: "#F5D9A8", text: "#1d1d1d" },
   web: { bg: "#CFE0F2", text: "#1d1d1d" },
   launch: { bg: "#1d1d1d", text: "#ffffff" },
-  growth: { bg: "#AFD9A4", text: "#1d1d1d" },
 };
 
 export function OutcomeCards() {
