@@ -4,18 +4,42 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { works } from "@/lib/data";
+import { openContact } from "@/lib/contact";
 import { WordFill } from "@/components/ui/WordFill";
 
 export function Hero() {
   return (
     <section id="top" className="relative overflow-hidden bg-paper">
       {/* Wordmark holds the full viewport until fonts resolve, then collapses */}
-      <div className="hero-stage flex items-center justify-center px-edge">
+      <div className="hero-stage flex flex-col items-center justify-center gap-7 px-edge sm:gap-9">
         {/* Smaller on mobile: the fixed 1rem gutter eats proportionally
             more width there than 1vw does on desktop. */}
         <h1 className="intro-mark w-full text-center text-[24vw] leading-[0.85] tracking-[-0.04em] md:text-[26vw]">
           ezibuilds
         </h1>
+
+        {/* CTAs live in the hero under the wordmark and arrive last in the
+            intro sequence, once the mark has settled. */}
+        <div className="intro intro-delay-2 flex flex-wrap items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={openContact}
+            data-cursor="hover"
+            className="group inline-flex min-h-[44px] items-center gap-2 rounded-pill bg-ink px-5 text-meta text-paper transition-colors hover:bg-ink-soft sm:min-h-0 sm:py-2.5"
+          >
+            Book a call
+            <Arrow className="transition-transform duration-300 ease-out group-hover:translate-x-1" />
+          </button>
+
+          <Link
+            href="/work"
+            data-cursor="hover"
+            className="group inline-flex min-h-[44px] items-center gap-2 rounded-pill border border-line px-5 text-meta text-ink transition-colors hover:border-ink hover:bg-ink/5 sm:min-h-0 sm:py-2.5"
+          >
+            View our work
+            <Arrow className="transition-transform duration-300 ease-out group-hover:translate-x-1" />
+          </Link>
+        </div>
       </div>
 
       {/* Works carousel, rises from below once the wordmark settles */}
@@ -33,18 +57,6 @@ export function Hero() {
           className="text-display-lg"
           text="We are a global product studio designing, building, and launching digital products that drive real business outcomes, from first wireframe to scale."
         />
-
-        {/* Deliberately a block, not inline after the last word. At this type
-            size the copy fills the measure at every breakpoint, so an inline
-            pill always wrapped onto a line of its own and read as detached. */}
-        <a
-          href="#capabilities"
-          data-cursor="hover"
-          className="group mt-8 inline-flex min-h-[44px] items-center gap-2 rounded-pill bg-ink px-5 text-meta text-paper transition-colors hover:bg-ink-soft sm:min-h-0 sm:py-2.5"
-        >
-          Learn more
-          <Arrow className="transition-transform duration-300 ease-out group-hover:translate-x-1" />
-        </a>
       </div>
     </section>
   );

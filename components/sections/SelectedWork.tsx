@@ -14,7 +14,7 @@ export function SelectedWork() {
     : works;
 
   return (
-    <section id="work" className="relative bg-paper py-24 sm:py-32">
+    <section id="work" className="relative bg-paper pb-24 sm:pb-32">
       <div className="px-edge">
         <motion.header
           {...revealProps()}

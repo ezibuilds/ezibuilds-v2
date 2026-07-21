@@ -34,7 +34,7 @@ const CLASSES =
  * the navigation history, so a button rendered up front would be inert for
  * anyone who lands here directly, from a shared link or a search result.
  */
-export function BackLink({ fallbackHref = "/#work" }: { fallbackHref?: string }) {
+export function BackLink({ fallbackHref = "/work" }: { fallbackHref?: string }) {
   const router = useRouter();
 
   // sessionStorage is external state, so read it through useSyncExternalStore
