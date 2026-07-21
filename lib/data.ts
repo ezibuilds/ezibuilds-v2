@@ -271,8 +271,21 @@ export type Offer = {
   slug: string;
   name: string;
   tagline: string;
-  description: string;
+  /** Short "for X" subtitle shown under the tagline. */
+  position: string;
+  /**
+   * Standard inclusions — the buyer-anxiety list. Maydit shows these as plain
+   * text bullets, no icons; the visual weight is on the `highlights` below.
+   */
   includes: string[];
+  /**
+   * The last two items in each list, rendered in the brand accent colour so
+   * the eye lands on the trust differentiators ("risk-free trial", "pause
+   * anytime") rather than the feature list.
+   */
+  highlights: string[];
+  /** Small uppercase line below the card, e.g. "WE CAP CLIENTS…". */
+  assurance: string;
   cta: string;
   /** Card fill colour, in the pastel vocabulary used across the site. */
   accent: string;
@@ -282,54 +295,71 @@ export type Offer = {
 export const offers: Offer[] = [
   {
     slug: "product-partnership",
-    name: "Product Partnership",
+    name: "Embedded Team",
     tagline: "Long-term design and engineering for ambitious teams.",
-    description:
-      "For startups that need an embedded product team. We design, build, and ship with you, week after week.",
+    position: "For startups that need an extension of their team.",
     includes: [
-      "Product Design",
-      "Web & Mobile Engineering",
-      "AI Features",
-      "Weekly Working Calls",
-      "Shared Slack Channel",
-      "Sprint Planning",
-      "Unlimited Iterations",
+      "Dedicated Product Designer",
+      "Dedicated Full-stack Developer",
+      "Weekly Sprint Planning",
+      "Unlimited Design Requests",
+      "Slack / WhatsApp Collaboration",
+      "Product Roadmapping",
+      "AI Solutions & Automation",
+      "Priority Support",
     ],
+    highlights: [
+      "7-day risk-free trial",
+      "Pause or cancel anytime",
+    ],
+    assurance: "We cap clients to protect quality. Limited slots open.",
     cta: "Become a Product Partner",
     accent: "#C5CEF0",
   },
   {
     slug: "fixed-scope",
-    name: "Fixed Scope",
-    tagline: "A defined build, delivered on time.",
-    description:
-      "For launches that need a website, MVP, or app shipped to a deadline. Scoped up front, fixed price, supported after launch.",
+    name: "Project Launch",
+    tagline: "Fixed-scope delivery for websites, apps, and MVPs.",
+    position: "For businesses launching a website, app, or MVP.",
     includes: [
-      "Website",
-      "SaaS MVP",
-      "Mobile App",
-      "Product Design",
-      "AI Integrations",
-      "14 Days Post-launch Support",
+      "Discovery Workshop",
+      "UX/UI Design",
+      "Website or App Development",
+      "AI Integration (if required)",
+      "QA & Performance Testing",
+      "SEO Best Practices",
+      "Documentation & Handover",
+      "14 Days Launch Support",
     ],
+    highlights: [
+      "50% upfront, 50% on delivery",
+      "Fixed timeline, no surprise scope creep",
+    ],
+    assurance: "Split payment — 50% now, 50% upon completion.",
     cta: "Start Your Project",
     accent: "#1d1d1d",
     textColor: "#ffffff",
   },
   {
     slug: "growth-partnership",
-    name: "Growth Partnership",
-    tagline: "Creative and growth for products already live.",
-    description:
-      "For products that shipped and need to compound. We run creative, performance, and CRO against the same funnel.",
+    name: "Growth Partner",
+    tagline: "Creative production and growth for products ready to scale.",
+    position: "For products that are live and ready to grow.",
     includes: [
-      "Product & Launch Video",
-      "AI Creative",
+      "Video Editing",
+      "Product Videos",
+      "Motion Graphics",
+      "Social Media Reels",
+      "AI Creative Production",
       "Performance Marketing",
-      "Analytics",
-      "Conversion Rate Optimisation",
-      "Monthly Reporting",
+      "Conversion Rate Optimization",
+      "Monthly Analytics & Reporting",
     ],
+    highlights: [
+      "Monthly growth reports",
+      "Weekly optimization reviews",
+    ],
+    assurance: "Performance-based, with monthly growth reporting.",
     cta: "Let's Scale",
     accent: "#AFD9A4",
   },
