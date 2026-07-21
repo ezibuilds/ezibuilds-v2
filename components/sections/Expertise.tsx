@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { capabilities } from "@/lib/data";
 import { VIEWPORT, fadeUp, stagger, revealProps } from "@/lib/motion";
@@ -41,13 +42,27 @@ function Column({
   const split = Math.ceil(services.length / 2);
   const columns = [services.slice(0, split), services.slice(split)];
 
+  const bannerSrc =
+    cap.id === "build"
+      ? "/build.png"
+      : cap.id === "design"
+        ? "/design.png"
+        : "/launch.png";
+
   return (
     <motion.div variants={fadeUp} id={cap.id} className="flex flex-col">
-      <div
-        className="aspect-square w-full rounded-card"
-        style={{ background: fill }}
-        aria-hidden
-      />
+      <div className="relative aspect-square w-full overflow-hidden rounded-card" style={{ background: fill }}>
+        <Image
+          src={bannerSrc}
+          alt=""
+          fill
+          className="object-cover"
+          quality={90}
+          // The card is ~33vw at three-up, but drops to one column below md,
+          // so it is full-bleed there rather than at the 768px Tailwind stop.
+          sizes="(min-width: 768px) 33vw, 100vw"
+        />
+      </div>
 
       <h3 className="mt-6 text-display-md">{cap.label}</h3>
 

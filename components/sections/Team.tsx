@@ -6,7 +6,7 @@ import { DURATION, EASE, VIEWPORT, revealProps } from "@/lib/motion";
 
 export function Team() {
   return (
-    <section className="bg-paper py-24 sm:py-32">
+    <section className="bg-paper pb-24 sm:pb-32">
       <div className="px-edge">
         <motion.header {...revealProps()} className="mb-16 max-w-3xl">
           <p className="mb-3 text-xs uppercase tracking-[0.22em] text-muted">

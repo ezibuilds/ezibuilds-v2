@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { DURATION, EASE, fadeUp, stagger } from "@/lib/motion";
+import { CONTACT_EVENT } from "@/lib/contact";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { Logo } from "@/components/ui/Logo";
 
@@ -24,6 +25,13 @@ export function Header() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Lets "Book a call" buttons elsewhere on the page open this drawer.
+  useEffect(() => {
+    const open = () => setContactOpen(true);
+    window.addEventListener(CONTACT_EVENT, open);
+    return () => window.removeEventListener(CONTACT_EVENT, open);
   }, []);
 
   // The menu covers the page, so the body behind it must not scroll.

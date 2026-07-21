@@ -16,6 +16,13 @@ const nextConfig: NextConfig = {
   },
 
   images: {
+    // Next 16 requires an explicit allowlist; without 90 here the `quality`
+    // prop is rejected and everything falls back to the default 75, which
+    // visibly softens detailed artwork.
+    qualities: [75, 90],
+    // AVIF first: at matched quality it holds gradients and fine detail far
+    // better than WebP, which is exactly what these renders are made of.
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",
