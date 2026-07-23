@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { works } from "@/lib/data";
+import { showcase, works } from "@/lib/data";
 import { cn } from "@/lib/cn";
 import { openContact } from "@/lib/contact";
 import { WordFill } from "@/components/ui/WordFill";
@@ -88,13 +88,12 @@ export function Hero() {
 }
 
 /**
- * The two rows carry different projects at any given moment: row B starts
- * half-way through the catalogue so the pair never shows the same card
- * stacked on itself, and runs in reverse order so the counter-scrolling rows
- * do not stay in lockstep.
+ * Row A is the showcase strip — finished screens shown full-bleed. Row B is
+ * the case-study catalogue, so the two rows never carry the same card and the
+ * linked work stays one row away from the eye candy.
  */
-const ROW_A = works;
-const ROW_B = [...works.slice(3), ...works.slice(0, 3)].reverse();
+const ROW_A = showcase;
+const ROW_B = works;
 
 /**
  * Mobile carousel.
@@ -306,8 +305,13 @@ function WorkCard({
         !shot && "justify-between"
       )}
       // Full-bleed cards are the screenshot edge to edge, so the pastel only
-      // dresses the cards that have no capture to show.
-      style={fullBleed ? undefined : { background: work.accent, color: text }}
+      // dresses the cards that have no capture to show — or sits behind a
+      // contained one, where it stands in for the image's own background.
+      style={
+        fullBleed && fullBleed.fit !== "contain"
+          ? undefined
+          : { background: work.accent, color: text }
+      }
     >
       {fullBleed ? (
         <Image
@@ -317,7 +321,14 @@ function WorkCard({
           sizes="(min-width: 1024px) 58vw, 84vw"
           quality={90}
           priority={eager}
-          className="object-cover object-top transition-transform duration-700 ease-(--ease-out) group-hover:scale-[1.03]"
+          className={cn(
+            "transition-transform duration-700 ease-(--ease-out) group-hover:scale-[1.03]",
+            // object-top, not center: a browser capture's nav and headline
+            // live at the top, so the crop has to come off the bottom.
+            fullBleed.fit === "contain"
+              ? "object-contain object-center"
+              : "object-cover object-top"
+          )}
         />
       ) : (
         <>

@@ -9,6 +9,14 @@
 export type WorkShot = {
   src: string;
   kind: "desktop" | "mobile";
+  /**
+   * How a full-bleed shot fills its card. "cover" (the default) crops to the
+   * card and suits browser captures, whose aspect is close to the card's.
+   * "contain" fits the whole image inside and lets the card's accent show
+   * through — the only way a near-square capture reads without losing half
+   * of itself to the crop.
+   */
+  fit?: "cover" | "contain";
 };
 
 export type Work = {
@@ -103,6 +111,91 @@ export const works: Work[] = [
     accent: "#CFE0F2",
     textColor: "#1d1d1d",
     href: "/work/assetflow",
+  },
+];
+
+/**
+ * The hero's first carousel: a strip of finished screens, shown full-bleed.
+ *
+ * Separate from `works` on purpose. These are pieces of visual work, not case
+ * studies — none of them has a /work/[slug] page behind it, so every card
+ * points at the work index rather than a detail route that does not exist.
+ * Keeping them out of `works` also keeps them off the /work grid, which is
+ * driven by the entries that do have write-ups.
+ *
+ * `accent` is each image's own background colour. It is what shows around a
+ * "contain" shot, so the card reads as one surface rather than a letterbox.
+ */
+export const showcase: Work[] = [
+  {
+    slug: "amipay",
+    client: "Amipay",
+    title: "Amipay",
+    category: "Crypto Payments",
+    tags: ["DESIGN", "MOBILE"],
+    year: "2025",
+    accent: "#8B5CF6",
+    textColor: "#ffffff",
+    href: "/work",
+    shot: { src: "/projects/amipay.webp", kind: "desktop" },
+  },
+  {
+    slug: "kapoma",
+    client: "Kapoma",
+    title: "Kapoma",
+    category: "E-commerce",
+    tags: ["DESIGN", "BUILD"],
+    year: "2025",
+    accent: "#FCEBE0",
+    href: "/work",
+    shot: { src: "/projects/kapoma.webp", kind: "desktop" },
+  },
+  {
+    slug: "flowance",
+    client: "Flowance",
+    title: "Flowance",
+    category: "Studio Site",
+    tags: ["DESIGN", "BUILD"],
+    year: "2025",
+    accent: "#3E9BD6",
+    textColor: "#ffffff",
+    href: "/work",
+    shot: { src: "/projects/flowance.webp", kind: "desktop" },
+  },
+  {
+    slug: "jee-pricing",
+    client: "Prepwise",
+    title: "Prepwise",
+    category: "Ed-tech",
+    tags: ["DESIGN", "SAAS"],
+    year: "2025",
+    accent: "#F2F2F2",
+    href: "/work",
+    shot: { src: "/projects/jee-pricing.webp", kind: "desktop" },
+  },
+  {
+    slug: "flodesk",
+    client: "Flodesk",
+    title: "Flodesk",
+    category: "Marketing Site",
+    tags: ["DESIGN", "BUILD"],
+    year: "2025",
+    accent: "#FAF7F0",
+    href: "/work",
+    shot: { src: "/projects/flodesk.webp", kind: "desktop" },
+  },
+  {
+    // 1920x1867 — almost square, so it is the one shot that has to be
+    // contained rather than cropped, or the bottom four widgets are lost.
+    slug: "widgets",
+    client: "Widgets",
+    title: "Widgets",
+    category: "UI System",
+    tags: ["DESIGN"],
+    year: "2025",
+    accent: "#EFEFEF",
+    href: "/work",
+    shot: { src: "/projects/widgets.webp", kind: "desktop", fit: "contain" },
   },
 ];
 
