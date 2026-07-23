@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { offers } from "@/lib/data";
 import { cn } from "@/lib/cn";
@@ -143,8 +144,20 @@ function OfferCard({
               : "bg-ink text-paper hover:bg-ink-soft"
           )}
         >
+          {/* Same Meet mark as the hero CTA — names the medium before the
+              click, since the drawer books a Meet. Its inner square is a hole
+              in the alpha, so on the paper (featured) button the button shows
+              through it and on the ink button the ink does; it reads on both.
+              The arrow is dropped here: this pill is full-width and centred,
+              and a trailing arrow pulled the lockup off-centre. */}
+          <Image
+            src="/logos/google-meet.png"
+            alt=""
+            width={18}
+            height={18}
+            className="h-[18px] w-[18px] shrink-0"
+          />
           {offer.cta}
-          <Arrow />
         </button>
 
         {/* Maydit's trust line. Uppercase, tight tracking, muted so it reads
@@ -166,20 +179,6 @@ function OfferCard({
         </p>
       </div>
     </article>
-  );
-}
-
-function Arrow() {
-  return (
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>
-      <path
-        d="M1 5h8m0 0L5 1m4 4L5 9"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }
 

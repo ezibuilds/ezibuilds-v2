@@ -363,7 +363,12 @@ export const products: Product[] = [
 export type Offer = {
   slug: string;
   name: string;
-  /** One "for X" line under the name — the only intro copy on the card. */
+  /**
+   * One intro line under the name — the only intro copy on the card. It
+   * describes the offering itself ("Monthly design retainer…") rather than
+   * naming an audience ("For startups…"), so a card speaks to anyone the
+   * service fits, not a single buyer type.
+   */
   position: string;
   /**
    * Standard inclusions — the buyer-anxiety list. Maydit shows these as plain
@@ -394,7 +399,8 @@ export const offers: Offer[] = [
   {
     slug: "product-partnership",
     name: "Embedded Team",
-    position: "For startups that need an extension of their team.",
+    position:
+      "A monthly design and development partner for teams that want ongoing product work without the hassle.",
     includes: [
       "Dedicated designer & full-stack developer",
       "Weekly sprints & product roadmapping",
@@ -407,13 +413,14 @@ export const offers: Offer[] = [
       "Pause or cancel anytime",
     ],
     assurance: "We cap clients to protect quality. Limited slots open.",
-    cta: "Become a Product Partner",
+    cta: "Schedule Strategy Call",
     accent: "#C5CEF0",
   },
   {
     slug: "fixed-scope",
     name: "Project Launch",
-    position: "For businesses launching a website, app, or MVP.",
+    position:
+      "Ideal for fixed-scope projects like a website, app, or MVP, designed and built end to end.",
     includes: [
       "Discovery workshop & UX/UI design",
       "Website or app development",
@@ -428,7 +435,7 @@ export const offers: Offer[] = [
       "Fixed timeline, no scope creep",
     ],
     assurance: "Split payment — 50% now, 50% upon completion.",
-    cta: "Start Your Project",
+    cta: "Schedule Strategy Call",
     // Was ink, back when this card was a solid dark block among two pastels.
     // As a marker on a paper card an ink dot reads as a bullet rather than a
     // colour, so it takes the sand from the works set.
@@ -437,7 +444,8 @@ export const offers: Offer[] = [
   {
     slug: "growth-partnership",
     name: "Growth Partner",
-    position: "For products that are live and ready to grow.",
+    position:
+      "Creative production and growth work that keeps a live product moving month after month.",
     includes: [
       "Product videos & motion graphics",
       "Social reels & short-form video",
@@ -450,7 +458,7 @@ export const offers: Offer[] = [
       "Weekly optimization reviews",
     ],
     assurance: "Performance-based, with monthly growth reporting.",
-    cta: "Let's Scale",
+    cta: "Schedule Strategy Call",
     accent: "#AFD9A4",
   },
 ];
