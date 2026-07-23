@@ -13,8 +13,13 @@ import { ProjectShot } from "@/components/ui/ProjectShot";
 export function Hero() {
   return (
     <section id="top" className="relative overflow-hidden bg-paper">
+      {/* The clouds stay deliberately atmospheric: this is a single, faded
+          backdrop for the opening moment rather than a surface treatment that
+          follows the content down the page. */}
+      <div className="hero-clouds" aria-hidden="true" />
+
       {/* Wordmark holds the full viewport until fonts resolve, then collapses */}
-      <div className="hero-stage flex flex-col items-center justify-center gap-7 px-edge sm:gap-9">
+      <div className="hero-stage relative z-10 flex flex-col items-center justify-center gap-7 px-edge sm:gap-9">
         {/* Smaller on mobile: the fixed 1rem gutter eats proportionally
             more width there than 1vw does on desktop. */}
         <h1 className="intro-mark w-full text-center text-[24vw] leading-[0.85] tracking-[-0.04em] md:text-[26vw]">
@@ -67,7 +72,7 @@ export function Hero() {
       {/* Works carousels, rise from below once the wordmark settles */}
       {/* No top padding here: it has to sit inside the overflow containers
           below, or it does nothing for the hover lift. */}
-      <div className="hero-rise relative pb-10">
+      <div className="hero-rise relative z-10 pb-10">
         <CarouselMobile items={ROW_A} />
         <CarouselDesktop items={ROW_A} />
 
@@ -83,7 +88,7 @@ export function Hero() {
       </div>
 
       {/* Studio intro: words fill from grey to ink on scroll */}
-      <div className="px-edge pb-20 pt-16">
+      <div className="relative z-10 px-edge pb-20 pt-16">
         <p className="mb-6 text-meta text-ink">The studio</p>
         <WordFill
           className="text-display-lg"

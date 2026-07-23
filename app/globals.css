@@ -150,6 +150,20 @@ body {
 
 /* Hero: wordmark holds full height until fonts resolve, then the
    carousel rises from below. Driven by .fonts-ready on <html>. */
+.hero-clouds {
+  position: absolute;
+  inset: 0 0 auto;
+  height: clamp(34rem, 72svh, 58rem);
+  pointer-events: none;
+  background-image: url("/hero-clouds.png");
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.72;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 56%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 56%, transparent 100%);
+}
+
 .hero-stage {
   height: 100svh;
   transition: height 1s var(--ease-out);
