@@ -153,9 +153,9 @@ function OfferCard({
           <Image
             src="/logos/google-meet.png"
             alt=""
-            width={18}
-            height={18}
-            className="h-[18px] w-[18px] shrink-0"
+            width={24}
+            height={24}
+            className="h-[24px] w-[24px] shrink-0"
           />
           {offer.cta}
         </button>

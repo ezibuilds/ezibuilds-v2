@@ -45,9 +45,9 @@ export function Hero() {
             <Image
               src="/logos/google-meet.png"
               alt=""
-              width={20}
-              height={20}
-              className="h-5 w-5 shrink-0"
+              width={24}
+              height={24}
+              className="h-6 w-6 shrink-0"
             />
             Book a call
             <Arrow className="transition-transform duration-300 ease-out group-hover:translate-x-1" />
