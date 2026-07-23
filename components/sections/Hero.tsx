@@ -22,14 +22,33 @@ export function Hero() {
         </h1>
 
         {/* CTAs live in the hero under the wordmark and arrive last in the
-            intro sequence, once the mark has settled. */}
+            intro sequence, once the mark has settled.
+
+            These two run one step up from the site's standard pill — px-6 /
+            py-3.5 against px-5 / py-2.5 — because they are the only pills on
+            the page carrying the hero. The type stays on text-meta: growing
+            the label too would push these out of the site's type scale and
+            make them read as a different component rather than a bigger one.
+            Every other pill (Learn more, the offer CTAs) keeps the standard
+            size, so the step up stays a hierarchy signal. */}
         <div className="intro intro-delay-2 flex flex-wrap items-center justify-center gap-3">
           <button
             type="button"
             onClick={openContact}
             data-cursor="hover"
-            className="group inline-flex min-h-[44px] items-center gap-2 rounded-pill bg-ink px-5 text-meta text-paper transition-colors hover:bg-ink-soft sm:min-h-0 sm:py-2.5"
+            className="group inline-flex min-h-[48px] items-center gap-2 rounded-pill bg-ink px-6 text-meta text-paper transition-colors hover:bg-ink-soft sm:min-h-0 sm:py-3.5"
           >
+            {/* Names the medium before the click: the drawer books a Meet.
+                The mark's inner square is a hole in the alpha, left that way
+                on purpose — the button's ink reads through it. Filling it
+                white turned the logo into a sticker on the dark pill. */}
+            <Image
+              src="/logos/google-meet.png"
+              alt=""
+              width={20}
+              height={20}
+              className="h-5 w-5 shrink-0"
+            />
             Book a call
             <Arrow className="transition-transform duration-300 ease-out group-hover:translate-x-1" />
           </button>
@@ -37,7 +56,7 @@ export function Hero() {
           <Link
             href="/work"
             data-cursor="hover"
-            className="group inline-flex min-h-[44px] items-center gap-2 rounded-pill border border-line px-5 text-meta text-ink transition-colors hover:border-ink hover:bg-ink/5 sm:min-h-0 sm:py-2.5"
+            className="group inline-flex min-h-[48px] items-center gap-2 rounded-pill border border-line px-6 text-meta text-ink transition-colors hover:border-ink hover:bg-ink/5 sm:min-h-0 sm:py-3.5"
           >
             View our work
             <Arrow className="transition-transform duration-300 ease-out group-hover:translate-x-1" />
