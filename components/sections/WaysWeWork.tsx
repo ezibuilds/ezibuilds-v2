@@ -10,15 +10,20 @@ import { VIEWPORT, fadeUp, stagger, revealProps } from "@/lib/motion";
 /**
  * Three offer cards, modelled on Studio Maydit's "Ways we work" section.
  *
- * The visual weight is on a plain-text bullet list (no icons, no chips) so
+ * The visual weight is on a plain check list (no chips, no pastel fills) so
  * the buyer can scan "what do I actually get" in a single glance. The last
- * two bullets in each card are highlighted in brand green to draw the eye to
- * the trust differentiators ("risk-free trial", "pause anytime") — Maydit
- * uses the same trick with "Free Framer development".
+ * rows in each card carry a filled green tick rather than a hairline one, to
+ * draw the eye to the trust differentiators ("risk-free trial", "pause
+ * anytime") — Maydit uses the same trick with "Free Framer development".
  *
- * Below the cards, a small uppercase "assurance" line sits on its own — this
- * is the scarcity / payment line that Maydit shows ("WE CAP CLIENTS…",
- * "SPLIT PAYMENT…") and reduces buyer anxiety about scope and commitment.
+ * Below each CTA, a small uppercase "assurance" line sits on its own — the
+ * scarcity / payment line that reduces buyer anxiety about scope and
+ * commitment, marked with the offer's colour so the site palette still shows
+ * up in a section that is otherwise ink and paper.
+ *
+ * The section chrome is the site's, not the reference's: full-bleed at the
+ * page edge on paper, with the left-aligned eyebrow and display heading every
+ * other section on the page uses. Only the cards come from the reference.
  */
 export function WaysWeWork() {
   const [contactOpen, setContactOpen] = useState(false);
@@ -42,9 +47,17 @@ export function WaysWeWork() {
           viewport={VIEWPORT}
           className="grid grid-cols-1 gap-5 md:grid-cols-3"
         >
-          {offers.map((o) => (
+          {offers.map((o, i) => (
             <motion.div key={o.slug} variants={fadeUp} className="flex">
-              <OfferCard offer={o} onCta={() => setContactOpen(true)} />
+              <OfferCard
+                offer={o}
+                // The first card is the one we want chosen, so it takes the
+                // ink fill and the other two stay hairline-on-paper. One dark
+                // card among light ones is the section's only hierarchy —
+                // three coloured fills gave it none.
+                featured={i === 0}
+                onCta={() => setContactOpen(true)}
+              />
             </motion.div>
           ))}
         </motion.div>
@@ -64,70 +77,69 @@ const HIGHLIGHT = "#1f9e5b";
 
 function OfferCard({
   offer,
+  featured,
   onCta,
 }: {
   offer: (typeof offers)[number];
+  featured: boolean;
   onCta: () => void;
 }) {
-  const text = offer.textColor ?? "#1d1d1d";
-
   return (
     <article
-      style={{ background: offer.accent, color: text }}
-      className="flex w-full flex-col rounded-card p-7 sm:p-9"
+      className={cn(
+        "flex w-full flex-col rounded-[20px] p-7 sm:rounded-[28px] sm:p-9",
+        featured
+          ? "bg-ink text-paper"
+          : "border border-line bg-paper text-ink"
+      )}
     >
-      <h3 className="text-[clamp(1.5rem,2.6vw,2.5rem)] leading-[1.05] tracking-[-0.02em]">
-        {offer.name}
-      </h3>
+      <h3 className="text-display-sm">{offer.name}</h3>
 
       {/* One intro line, not two: the old tagline + position pair said the
           same thing twice and pushed the list below the fold of a glance.
           The "for X" line is the one that lets a buyer self-select. */}
-      <p className="mt-3 text-sm leading-relaxed opacity-80 sm:text-base">
+      <p
+        className={cn(
+          "mt-3 text-sm leading-relaxed sm:text-base",
+          featured ? "text-paper/60" : "text-muted"
+        )}
+      >
         {offer.position}
       </p>
 
-      {/* No "Inside the partnership" eyebrow — a five-row list under the
-          offer name explains itself, and the caps register is reserved for
-          the assurance fine print at the foot of the card. */}
-      <ul className="mt-8 space-y-3 text-sm sm:text-base">
+      {/* No "Inside the partnership" eyebrow — a list under the offer name
+          explains itself, and the caps register is reserved for the assurance
+          fine print at the foot of the card. */}
+      <ul className="mt-8 space-y-3.5 text-sm sm:text-base">
         {offer.includes.map((item) => (
-          <li key={item} className="flex items-start gap-2.5">
-            {/* Standard rows use a tiny disc — same rhythm as the row labels
-                on the work-detail page so the card reads as part of the
-                site, not its own thing. The w-3 box matches the check icon's
-                width so both row types share one text edge. */}
-            <span
-              aria-hidden
-              className="mt-2 flex h-3 w-3 shrink-0 items-center justify-center"
-            >
-              <span className="h-1 w-1 rounded-full bg-current opacity-70" />
-            </span>
+          <li key={item} className="flex items-start gap-3">
+            <Tick />
             <span>{item}</span>
           </li>
         ))}
         {offer.highlights.map((item) => (
-          // The text stays in the card's normal colour — only the icon
+          // The text stays in the card's normal colour — only the mark
           // carries the green, so the eye reads it as "this is a trust
-          // signal" rather than "this whole row is a different colour".
-          <li key={item} className="flex items-start gap-2.5">
-            <Check />
+          // signal" rather than "this whole row is a different colour". The
+          // solid disc is what separates it from the hairline ticks above.
+          <li key={item} className="flex items-start gap-3">
+            <TickBadge />
             <span>{item}</span>
           </li>
         ))}
       </ul>
 
+      {/* Full-width CTA, pinned to the foot so all three buttons land on one
+          line however uneven the lists above them are. */}
       <div className="mt-auto pt-10">
         <button
           type="button"
           onClick={onCta}
           data-cursor="hover"
           className={cn(
-            "inline-flex min-h-[44px] items-center gap-2 rounded-pill px-5 text-meta transition-colors sm:min-h-0 sm:py-2.5",
-            // Light cards get the same ink-on-paper pill as the hero CTA; the
-            // dark card inverts it so the CTA reads on its own background.
-            offer.slug === "fixed-scope"
-              ? "bg-paper text-ink hover:bg-paper/90"
+            "flex min-h-[48px] w-full items-center justify-center gap-2 rounded-pill px-5 text-meta transition-colors",
+            featured
+              ? "bg-paper text-ink hover:bg-gray"
               : "bg-ink text-paper hover:bg-ink-soft"
           )}
         >
@@ -135,10 +147,21 @@ function OfferCard({
           <Arrow />
         </button>
 
-        {/* Maydit's trust line. Uppercase, tight tracking, slightly muted so
-            it reads as fine print rather than a heading. mt-3 keeps it close
-            to the CTA — same vertical relationship as the reference. */}
-        <p className="mt-3 text-[11px] uppercase tracking-[0.22em] opacity-65">
+        {/* Maydit's trust line. Uppercase, tight tracking, muted so it reads
+            as fine print rather than a heading, and centred under the button
+            it qualifies. The dot is the offer's colour — the only place the
+            pastel palette appears in this section. */}
+        <p
+          className={cn(
+            "mt-4 flex items-center justify-center gap-2 text-center text-[11px] leading-normal uppercase tracking-[0.22em]",
+            featured ? "text-paper/55" : "text-muted"
+          )}
+        >
+          <span
+            aria-hidden
+            className="h-1.5 w-1.5 shrink-0 rounded-full"
+            style={{ background: offer.accent }}
+          />
           {offer.assurance}
         </p>
       </div>
@@ -160,26 +183,47 @@ function Arrow() {
   );
 }
 
-/**
- * Small check icon used to mark the trust differentiators in each card.
- * Sits at the same baseline position as the disc bullet (mt-2.5 in the
- * parent <li>) so the two row types line up vertically.
- */
-function Check() {
+/** Hairline tick for the standard inclusions. */
+function Tick() {
   return (
     <svg
-      width="12"
-      height="12"
+      width="13"
+      height="13"
       viewBox="0 0 12 12"
       fill="none"
       aria-hidden
-      className="mt-2 shrink-0"
-      style={{ color: HIGHLIGHT }}
+      className="mt-1 shrink-0 opacity-70"
     >
       <path
-        d="M2.5 6.5l2.5 2.5L9.5 3.5"
+        d="M2 6.2l2.6 2.6L10 3.4"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/**
+ * Filled tick for the trust differentiators. Sits at the same baseline as the
+ * hairline tick above it so the two row types share one text edge.
+ */
+function TickBadge() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      aria-hidden
+      className="mt-0.5 shrink-0"
+    >
+      <circle cx="7" cy="7" r="7" fill={HIGHLIGHT} />
+      <path
+        d="M4 7.2l2.2 2.2L10 5.2"
+        stroke="#ffffff"
+        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

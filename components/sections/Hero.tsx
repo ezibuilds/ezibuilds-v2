@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { works } from "@/lib/data";
 import { cn } from "@/lib/cn";
@@ -44,12 +45,22 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Works carousel, rises from below once the wordmark settles */}
+      {/* Works carousels, rise from below once the wordmark settles */}
       {/* No top padding here: it has to sit inside the overflow containers
           below, or it does nothing for the hover lift. */}
       <div className="hero-rise relative pb-10">
-        <CarouselMobile />
-        <CarouselDesktop />
+        <CarouselMobile items={ROW_A} />
+        <CarouselDesktop items={ROW_A} />
+
+        {/* Second row, running the other way. Two tracks of the same size
+            moving in opposite directions read as one field of work rather
+            than a single queue, and the counter-motion keeps the eye in the
+            hero. Row B is phase-shifted half a card so the two rows never
+            line up into a grid. */}
+        <div className="mt-4 sm:mt-5">
+          <CarouselMobile items={ROW_B} reverse />
+          <CarouselDesktop items={ROW_B} reverse />
+        </div>
       </div>
 
       {/* Studio intro: words fill from grey to ink on scroll */}
@@ -77,6 +88,15 @@ export function Hero() {
 }
 
 /**
+ * The two rows carry different projects at any given moment: row B starts
+ * half-way through the catalogue so the pair never shows the same card
+ * stacked on itself, and runs in reverse order so the counter-scrolling rows
+ * do not stay in lockstep.
+ */
+const ROW_A = works;
+const ROW_B = [...works.slice(3), ...works.slice(0, 3)].reverse();
+
+/**
  * Mobile carousel.
  *
  * Drives native scrollLeft rather than a transform, so the auto-advance and a
@@ -84,7 +104,13 @@ export function Hero() {
  * desktop track cannot be reused here: it early-returns on (hover: none), which
  * left the row completely static on a phone.
  */
-function CarouselMobile() {
+function CarouselMobile({
+  items,
+  reverse = false,
+}: {
+  items: typeof works;
+  reverse?: boolean;
+}) {
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -96,10 +122,15 @@ function CarouselMobile() {
     let raf = 0;
     let paused = false;
     let resumeTimer = 0;
-    // Position is tracked as a float here rather than read back from the
-    // element each frame: scrollLeft can round to an integer, which swallows a
-    // sub-pixel increment entirely and leaves the row sitting still.
-    let pos = el.scrollLeft;
+    // A reverse row has to start at the halfway mark, not at 0: scrollLeft
+    // cannot go negative, so from the left edge there is nothing to scroll
+    // back into and the row would sit pinned at zero. The extra half-card
+    // takes it off the other row's rhythm — every card is the same width now,
+    // so without it the two rows would sit in a grid.
+    let pos = reverse
+      ? el.scrollWidth / 2 - el.scrollWidth / (4 * items.length)
+      : el.scrollLeft;
+    if (reverse) el.scrollLeft = pos;
 
     const step = () => {
       if (paused) {
@@ -108,8 +139,13 @@ function CarouselMobile() {
         // The list is rendered twice; wrapping at the halfway mark makes the
         // loop seamless because the second copy is pixel-identical.
         const half = el.scrollWidth / 2;
-        pos += SPEED;
-        if (pos >= half) pos -= half;
+        if (reverse) {
+          pos -= SPEED;
+          if (pos <= 0) pos += half;
+        } else {
+          pos += SPEED;
+          if (pos >= half) pos -= half;
+        }
         el.scrollLeft = pos;
       }
       raf = requestAnimationFrame(step);
@@ -138,7 +174,7 @@ function CarouselMobile() {
       el.removeEventListener("touchend", release);
       el.removeEventListener("touchcancel", release);
     };
-  }, []);
+  }, [reverse, items.length]);
 
   return (
     <div
@@ -152,15 +188,21 @@ function CarouselMobile() {
       className="no-scrollbar overflow-x-auto overflow-y-hidden px-edge pt-4 lg:hidden"
     >
       <div className="flex w-max gap-4">
-        {[...works, ...works].map((w, i) => (
-          <WorkCard key={`${w.slug}-${i}`} work={w} eager={i < works.length} />
+        {[...items, ...items].map((w, i) => (
+          <WorkCard key={`${w.slug}-${i}`} work={w} eager={i < 2} />
         ))}
       </div>
     </div>
   );
 }
 
-function CarouselDesktop() {
+function CarouselDesktop({
+  items,
+  reverse = false,
+}: {
+  items: typeof works;
+  reverse?: boolean;
+}) {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -171,16 +213,26 @@ function CarouselDesktop() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const SPEED = 0.6; // px per frame, constant auto-scroll
-    let pos = 0;
+    // Reverse rows travel from -half up to 0, so there are always two full
+    // sets of cards sitting off the left edge to slide back in. The extra
+    // half-card phase-shifts this row off the other one's rhythm.
+    let pos = reverse
+      ? -track.scrollWidth / 2 + track.scrollWidth / (8 * items.length)
+      : 0;
     let raf = 0;
     let paused = false;
 
     const step = () => {
       if (!paused) {
-        pos -= SPEED;
         const halfWidth = track.scrollWidth / 2;
         // wrap when one full set has scrolled
-        if (-pos >= halfWidth) pos += halfWidth;
+        if (reverse) {
+          pos += SPEED;
+          if (pos >= 0) pos -= halfWidth;
+        } else {
+          pos -= SPEED;
+          if (-pos >= halfWidth) pos += halfWidth;
+        }
         track.style.transform = `translate3d(${pos}px,0,0)`;
       }
       raf = requestAnimationFrame(step);
@@ -204,13 +256,13 @@ function CarouselDesktop() {
       track.removeEventListener("focusin", pause);
       track.removeEventListener("focusout", resume);
     };
-  }, []);
+  }, [reverse, items.length]);
 
   return (
     <div className="hidden overflow-hidden px-edge pt-4 lg:block">
       <div ref={trackRef} className="flex w-max gap-5 will-change-transform">
-        {[...works, ...works, ...works, ...works].map((w, i) => (
-          <WorkCard key={`${w.slug}-${i}`} work={w} eager={i < works.length} />
+        {[...items, ...items, ...items, ...items].map((w, i) => (
+          <WorkCard key={`${w.slug}-${i}`} work={w} eager={i < 2} />
         ))}
       </div>
     </div>
@@ -229,6 +281,12 @@ function WorkCard({
   eager?: boolean;
 }) {
   const text = work.textColor || "#0a0a0a";
+  const shot = work.shot;
+  // Browser captures are already landscape, so they fill the card outright.
+  // Phone captures and projects with no capture at all fall back to the
+  // pastel card — the same mix of screenshot and flat-colour panels the
+  // reference row has.
+  const fullBleed = shot?.kind === "desktop" ? shot : undefined;
   return (
     <MotionLink
       href={work.href}
@@ -237,70 +295,97 @@ function WorkCard({
       data-cursor-label={work.comingSoon ? "SOON" : "VIEW"}
       whileHover={{ y: -6 }}
       transition={{ type: "spring", damping: 22, stiffness: 240 }}
-      // On a phone 68vw is a 265px-wide column at 490px tall, far narrower
-      // than the reference. Widen it and let the card sit closer to square.
       className={cn(
-        "group relative flex h-[46vh] min-h-[300px] w-[84vw] max-w-[820px] flex-col overflow-hidden rounded-[20px] p-6 sm:h-[58vh] sm:min-h-[420px] sm:w-[68vw] sm:rounded-[28px] sm:p-10 lg:w-[58vw] lg:max-w-[760px]",
+        "group relative flex h-[46vh] min-h-[300px] w-[84vw] max-w-[820px] shrink-0 flex-col overflow-hidden rounded-[20px] border border-line sm:h-[58vh] sm:min-h-[420px] sm:w-[68vw] sm:rounded-[28px] lg:w-[58vw] lg:max-w-[760px]",
+        // A full-bleed card is the capture edge to edge, so the padding only
+        // belongs to the cards that hold type.
+        !fullBleed && "p-6 sm:p-10",
         // Screenshot cards read top-down (text, then the shot fills the
         // bottom); typographic cards keep the original spread layout with
         // the big name at the foot.
-        !work.shot && "justify-between"
+        !shot && "justify-between"
       )}
-      style={{ background: work.accent, color: text }}
+      // Full-bleed cards are the screenshot edge to edge, so the pastel only
+      // dresses the cards that have no capture to show.
+      style={fullBleed ? undefined : { background: work.accent, color: text }}
     >
-      <div className="relative z-10 flex flex-wrap items-start justify-between gap-2">
-        <span className="text-xs uppercase tracking-[0.22em] opacity-80">
-          {work.client}
-        </span>
-        <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-current/30 px-3 py-1 text-[10px] uppercase tracking-[0.22em]">
-          {work.comingSoon ? (
+      {fullBleed ? (
+        <Image
+          src={fullBleed.src}
+          alt={work.client}
+          fill
+          sizes="(min-width: 1024px) 58vw, 84vw"
+          quality={90}
+          priority={eager}
+          className="object-cover object-top transition-transform duration-700 ease-(--ease-out) group-hover:scale-[1.03]"
+        />
+      ) : (
+        <>
+          <div className="relative z-10 flex flex-wrap items-start justify-between gap-2">
+            <span className="text-xs uppercase tracking-[0.22em] opacity-80">
+              {work.client}
+            </span>
+            <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-current/30 px-3 py-1 text-[10px] uppercase tracking-[0.22em]">
+              {work.comingSoon ? (
+                <>
+                  Coming soon
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-current" />
+                </>
+              ) : (
+                <>
+                  {work.category}
+                  <Arrow className="opacity-80" />
+                </>
+              )}
+            </span>
+          </div>
+
+          {shot ? (
             <>
-              Coming soon
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-current" />
+              {/* Phone captures are far too tall to fill the card, so they
+                  keep the device-panel treatment against the pastel. */}
+              <div className="relative z-10 mt-4 sm:mt-6">
+                <h3 className="text-[clamp(1.75rem,6vw,4rem)] leading-[0.95] tracking-[-0.02em]">
+                  {work.client}
+                </h3>
+                <p className="mt-2.5 text-xs uppercase tracking-[0.22em] opacity-80">
+                  {work.year} · {work.tags.slice(0, 2).join(" / ")}
+                </p>
+              </div>
+              <ProjectShot
+                shot={shot}
+                eager={eager}
+                sizes="(min-width: 1024px) 22vw, 40vw"
+                className="bottom-0 right-[8%] h-[56%] sm:h-[66%]"
+              />
             </>
           ) : (
             <>
-              {work.category}
-              <Arrow className="opacity-80" />
+              <div className="mt-auto">
+                <h3 className="text-[clamp(1.875rem,7vw,6rem)] leading-[0.95] tracking-[-0.02em]">
+                  {work.client}
+                </h3>
+              </div>
+
+              <div className="flex items-center justify-between text-xs uppercase tracking-[0.22em] opacity-80">
+                <span>{work.year}</span>
+                <span>{work.tags.slice(0, 2).join(" / ")}</span>
+              </div>
             </>
           )}
-        </span>
-      </div>
-
-      {work.shot ? (
-        <>
-          <div className="relative z-10 mt-4 sm:mt-6">
-            <h3 className="text-[clamp(1.75rem,6vw,4rem)] leading-[0.95] tracking-[-0.02em]">
-              {work.client}
-            </h3>
-            <p className="mt-2.5 text-xs uppercase tracking-[0.22em] opacity-80">
-              {work.year} · {work.tags.slice(0, 2).join(" / ")}
-            </p>
-          </div>
-          <ProjectShot
-            shot={work.shot}
-            eager={eager}
-            sizes="(min-width: 1024px) 36vw, 60vw"
-            className={
-              work.shot.kind === "mobile"
-                ? "bottom-0 right-[8%] h-[56%] sm:h-[66%]"
-                : "bottom-0 right-[6%] h-[52%] w-[74%] sm:h-[58%] sm:w-[62%]"
-            }
-          />
         </>
-      ) : (
-        <>
-          <div className="mt-auto">
-            <h3 className="text-[clamp(1.875rem,7vw,6rem)] leading-[0.95] tracking-[-0.02em]">
-              {work.client}
-            </h3>
-          </div>
+      )}
 
-          <div className="flex items-center justify-between text-xs uppercase tracking-[0.22em] opacity-80">
-            <span>{work.year}</span>
-            <span>{work.tags.slice(0, 2).join(" / ")}</span>
-          </div>
-        </>
+      {/* The caption a full-bleed card cannot carry at rest. The custom
+          cursor already says VIEW on hover; this says what you are viewing,
+          and the scrim is the only thing that puts type over a capture. */}
+      {fullBleed && (
+        <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 bg-linear-to-t from-ink/75 to-transparent p-6 pt-20 text-paper opacity-0 transition-opacity duration-500 ease-(--ease-out) group-hover:opacity-100 sm:p-10 sm:pt-28">
+          <span className="text-display-sm leading-none">{work.client}</span>
+          <span className="text-xs uppercase tracking-[0.22em] opacity-80">
+            {work.comingSoon ? "Coming soon" : work.category}
+          </span>
+        </div>
       )}
     </MotionLink>
   );

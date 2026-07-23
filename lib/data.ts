@@ -288,9 +288,13 @@ export type Offer = {
   /** Small uppercase line below the card, e.g. "WE CAP CLIENTS…". */
   assurance: string;
   cta: string;
-  /** Card fill colour, in the pastel vocabulary used across the site. */
+  /**
+   * The offer's colour, in the pastel vocabulary used across the site. The
+   * cards themselves are ink and paper, so this is not a fill: it marks the
+   * assurance line at the foot of the card and is the only place the palette
+   * shows up in that section.
+   */
   accent: string;
-  textColor?: string;
 };
 
 export const offers: Offer[] = [
@@ -332,8 +336,10 @@ export const offers: Offer[] = [
     ],
     assurance: "Split payment — 50% now, 50% upon completion.",
     cta: "Start Your Project",
-    accent: "#1d1d1d",
-    textColor: "#ffffff",
+    // Was ink, back when this card was a solid dark block among two pastels.
+    // As a marker on a paper card an ink dot reads as a bullet rather than a
+    // colour, so it takes the sand from the works set.
+    accent: "#F5D9A8",
   },
   {
     slug: "growth-partnership",
