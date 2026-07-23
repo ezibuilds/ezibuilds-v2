@@ -26,6 +26,21 @@ import { VIEWPORT, fadeUp, stagger, revealProps } from "@/lib/motion";
  * page edge on paper, with the left-aligned eyebrow and display heading every
  * other section on the page uses. Only the cards come from the reference.
  */
+/**
+ * The featured offer moved to the middle of the row, its neighbours kept in
+ * their original order around it. Computed once at module load — the offers
+ * list is static. Falls back to the raw order if the shape is ever not
+ * "exactly one featured among three".
+ */
+const orderedOffers = (() => {
+  const featured = offers.filter((o) => o.featured);
+  const rest = offers.filter((o) => !o.featured);
+  if (featured.length === 1 && rest.length === 2) {
+    return [rest[0], featured[0], rest[1]];
+  }
+  return offers;
+})();
+
 export function WaysWeWork() {
   const [contactOpen, setContactOpen] = useState(false);
 
@@ -41,22 +56,22 @@ export function WaysWeWork() {
           </h2>
         </motion.header>
 
+        {/* On md+ the ink card sits dead centre — the pricing-table
+            convention that reads the middle card as the recommended one. On
+            mobile the stack keeps its natural order (the recommended card in
+            the middle of the three), which is fine one-per-row. */}
         <motion.div
           variants={stagger(0.1)}
           initial="hidden"
           whileInView="visible"
           viewport={VIEWPORT}
-          className="grid grid-cols-1 gap-5 md:grid-cols-3"
+          className="grid grid-cols-1 items-stretch gap-5 pt-4 md:grid-cols-3"
         >
-          {offers.map((o, i) => (
+          {orderedOffers.map((o) => (
             <motion.div key={o.slug} variants={fadeUp} className="flex">
               <OfferCard
                 offer={o}
-                // The first card is the one we want chosen, so it takes the
-                // ink fill and the other two stay hairline-on-paper. One dark
-                // card among light ones is the section's only hierarchy —
-                // three coloured fills gave it none.
-                featured={i === 0}
+                featured={!!o.featured}
                 onCta={() => setContactOpen(true)}
               />
             </motion.div>
@@ -88,12 +103,21 @@ function OfferCard({
   return (
     <article
       className={cn(
-        "flex w-full flex-col rounded-[20px] p-7 sm:rounded-[28px] sm:p-9",
+        "relative flex w-full flex-col rounded-[20px] p-7 sm:rounded-[28px] sm:p-9",
         featured
-          ? "bg-ink text-paper"
+          ? "bg-ink text-paper md:-my-3 md:pt-12 md:pb-12"
           : "border border-line bg-paper text-ink"
       )}
     >
+      {/* Straddles the top edge, half on the paper above and half on the ink
+          card — a paper pill reads on both. It is what gives the centred dark
+          card a stated reason to stand out rather than just being darker. */}
+      {featured && (
+        <span className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-pill border border-line bg-paper px-3.5 py-1.5 text-[11px] uppercase tracking-[0.22em] text-ink shadow-sm">
+          Most popular
+        </span>
+      )}
+
       <h3 className="text-display-sm">{offer.name}</h3>
 
       {/* One intro line, not two: the old tagline + position pair said the

@@ -393,6 +393,12 @@ export type Offer = {
    * shows up in that section.
    */
   accent: string;
+  /**
+   * The recommended offer. Exactly one carries this. It renders as the ink
+   * card and is placed in the middle of the row with a "Most popular" badge —
+   * the standard pricing-table convention.
+   */
+  featured?: boolean;
 };
 
 export const offers: Offer[] = [
@@ -415,6 +421,7 @@ export const offers: Offer[] = [
     assurance: "We cap clients to protect quality. Limited slots open.",
     cta: "Schedule Strategy Call",
     accent: "#C5CEF0",
+    featured: true,
   },
   {
     slug: "fixed-scope",
