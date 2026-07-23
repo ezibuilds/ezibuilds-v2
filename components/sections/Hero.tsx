@@ -4,8 +4,10 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { works } from "@/lib/data";
+import { cn } from "@/lib/cn";
 import { openContact } from "@/lib/contact";
 import { WordFill } from "@/components/ui/WordFill";
+import { ProjectShot } from "@/components/ui/ProjectShot";
 
 export function Hero() {
   return (
@@ -151,7 +153,7 @@ function CarouselMobile() {
     >
       <div className="flex w-max gap-4">
         {[...works, ...works].map((w, i) => (
-          <WorkCard key={`${w.slug}-${i}`} work={w} />
+          <WorkCard key={`${w.slug}-${i}`} work={w} eager={i < works.length} />
         ))}
       </div>
     </div>
@@ -208,7 +210,7 @@ function CarouselDesktop() {
     <div className="hidden overflow-hidden px-edge pt-4 lg:block">
       <div ref={trackRef} className="flex w-max gap-5 will-change-transform">
         {[...works, ...works, ...works, ...works].map((w, i) => (
-          <WorkCard key={`${w.slug}-${i}`} work={w} />
+          <WorkCard key={`${w.slug}-${i}`} work={w} eager={i < works.length} />
         ))}
       </div>
     </div>
@@ -219,7 +221,13 @@ function CarouselDesktop() {
 // client-side and lets the route transition run.
 const MotionLink = motion.create(Link);
 
-function WorkCard({ work }: { work: (typeof works)[number] }) {
+function WorkCard({
+  work,
+  eager = false,
+}: {
+  work: (typeof works)[number];
+  eager?: boolean;
+}) {
   const text = work.textColor || "#0a0a0a";
   return (
     <MotionLink
@@ -231,14 +239,20 @@ function WorkCard({ work }: { work: (typeof works)[number] }) {
       transition={{ type: "spring", damping: 22, stiffness: 240 }}
       // On a phone 68vw is a 265px-wide column at 490px tall, far narrower
       // than the reference. Widen it and let the card sit closer to square.
-      className="group relative flex h-[46vh] min-h-[300px] w-[84vw] max-w-[820px] flex-col justify-between overflow-hidden rounded-[20px] p-6 sm:h-[58vh] sm:min-h-[420px] sm:w-[68vw] sm:rounded-[28px] sm:p-10 lg:w-[58vw] lg:max-w-[760px]"
+      className={cn(
+        "group relative flex h-[46vh] min-h-[300px] w-[84vw] max-w-[820px] flex-col overflow-hidden rounded-[20px] p-6 sm:h-[58vh] sm:min-h-[420px] sm:w-[68vw] sm:rounded-[28px] sm:p-10 lg:w-[58vw] lg:max-w-[760px]",
+        // Screenshot cards read top-down (text, then the shot fills the
+        // bottom); typographic cards keep the original spread layout with
+        // the big name at the foot.
+        !work.shot && "justify-between"
+      )}
       style={{ background: work.accent, color: text }}
     >
-      <div className="flex items-start justify-between">
+      <div className="relative z-10 flex flex-wrap items-start justify-between gap-2">
         <span className="text-xs uppercase tracking-[0.22em] opacity-80">
           {work.client}
         </span>
-        <span className="flex items-center gap-1.5 rounded-full border border-current/30 px-3 py-1 text-[10px] uppercase tracking-[0.22em]">
+        <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-current/30 px-3 py-1 text-[10px] uppercase tracking-[0.22em]">
           {work.comingSoon ? (
             <>
               Coming soon
@@ -253,16 +267,41 @@ function WorkCard({ work }: { work: (typeof works)[number] }) {
         </span>
       </div>
 
-      <div className="mt-auto">
-        <h3 className="text-[clamp(1.875rem,7vw,6rem)] leading-[0.95] tracking-[-0.02em]">
-          {work.client}
-        </h3>
-      </div>
+      {work.shot ? (
+        <>
+          <div className="relative z-10 mt-4 sm:mt-6">
+            <h3 className="text-[clamp(1.75rem,6vw,4rem)] leading-[0.95] tracking-[-0.02em]">
+              {work.client}
+            </h3>
+            <p className="mt-2.5 text-xs uppercase tracking-[0.22em] opacity-80">
+              {work.year} · {work.tags.slice(0, 2).join(" / ")}
+            </p>
+          </div>
+          <ProjectShot
+            shot={work.shot}
+            eager={eager}
+            sizes="(min-width: 1024px) 36vw, 60vw"
+            className={
+              work.shot.kind === "mobile"
+                ? "bottom-0 right-[8%] h-[56%] sm:h-[66%]"
+                : "bottom-0 right-[6%] h-[52%] w-[74%] sm:h-[58%] sm:w-[62%]"
+            }
+          />
+        </>
+      ) : (
+        <>
+          <div className="mt-auto">
+            <h3 className="text-[clamp(1.875rem,7vw,6rem)] leading-[0.95] tracking-[-0.02em]">
+              {work.client}
+            </h3>
+          </div>
 
-      <div className="flex items-center justify-between text-xs uppercase tracking-[0.22em] opacity-80">
-        <span>{work.year}</span>
-        <span>{work.tags.slice(0, 2).join(" / ")}</span>
-      </div>
+          <div className="flex items-center justify-between text-xs uppercase tracking-[0.22em] opacity-80">
+            <span>{work.year}</span>
+            <span>{work.tags.slice(0, 2).join(" / ")}</span>
+          </div>
+        </>
+      )}
     </MotionLink>
   );
 }

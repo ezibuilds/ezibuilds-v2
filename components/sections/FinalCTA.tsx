@@ -10,10 +10,10 @@ import { VIEWPORT, fadeUp, stagger } from "@/lib/motion";
  * escape hatch on the left, Cal.com inline embed on the right.
  *
  * The embed is configured for "month_view" so the calendar picker fills
- * the column. On mobile it collapses below the copy — `min-h` on the
- * wrapper keeps the embed from collapsing to a sliver before its iframe
- * loads, and `aspect-square sm:aspect-auto sm:min-h-[640px]` gives the
- * embed a sensible height across breakpoints.
+ * the column, and is themed dark to sit seamlessly on the ink section.
+ * Height is left to Cal's own iframe auto-resize: picking a slot expands
+ * the booker, and the panel grows with it instead of scrolling inside a
+ * cropped card. On mobile it collapses below the copy.
  */
 export function FinalCTA() {
   useEffect(() => {
@@ -24,7 +24,49 @@ export function FinalCTA() {
       cal("ui", {
         hideEventTypeDetails: false,
         layout: "month_view",
-        theme: "auto",
+        // The embed sits directly on the ink section, so it is pinned dark
+        // and its tokens are driven to the site palette: cal-bg matches the
+        // section's #1d1d1d exactly so the iframe is seamless, borders reuse
+        // the border-paper/15 hairline weight, and the brand (buttons,
+        // selected day) is the same white-pill-on-ink the site's dark
+        // surfaces already use. cssVarsPerTheme keys are Cal's design
+        // tokens (no `--`).
+        theme: "dark",
+        styles: {
+          branding: { brandColor: "#ffffff" },
+          body: { background: "#1d1d1d" },
+        },
+        cssVarsPerTheme: {
+          dark: {
+            "cal-brand": "#ffffff",
+            "cal-brand-emphasis": "#e5e5e5",
+            "cal-brand-text": "#1d1d1d",
+            "cal-brand-subtle": "#333333",
+            "cal-bg": "#1d1d1d",
+            "cal-bg-emphasis": "#333333",
+            "cal-bg-subtle": "#292929",
+            "cal-bg-muted": "#232323",
+            "cal-border": "rgba(255,255,255,0.14)",
+            "cal-border-subtle": "rgba(255,255,255,0.08)",
+            "cal-border-emphasis": "rgba(255,255,255,0.32)",
+            "cal-border-booker": "rgba(255,255,255,0.14)",
+            "cal-text": "#ffffff",
+            "cal-text-emphasis": "#ffffff",
+            "cal-text-subtle": "#a3a3a3",
+            "cal-text-muted": "#888888",
+          },
+          // Kept as a sensible inverse in case the embed ever falls back to
+          // light; the config below forces dark.
+          light: {
+            "cal-brand": "#1d1d1d",
+            "cal-brand-text": "#ffffff",
+            "cal-bg": "#ffffff",
+            "cal-bg-subtle": "#f5f5f5",
+            "cal-border": "rgba(29,29,29,0.12)",
+            "cal-text": "#1d1d1d",
+            "cal-text-subtle": "#888888",
+          },
+        },
       });
     })();
   }, []);
@@ -34,7 +76,7 @@ export function FinalCTA() {
       id="contact"
       className="bg-ink px-edge py-24 text-paper sm:py-32"
     >
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
         <motion.div
           variants={stagger(0.1)}
           initial="hidden"
@@ -46,9 +88,14 @@ export function FinalCTA() {
             Let&apos;s talk
           </motion.p>
 
+          {/* Full-bleed section, so the left column is now ~half the viewport.
+              The clamp max is held to a rem value the longest word
+              ("remembering?") still fits inside the narrowest lg column
+              (~590px at the lg breakpoint) so it never slides under the
+              calendar. */}
           <motion.h2
             variants={fadeUp}
-            className="text-[clamp(2.5rem,8vw,8rem)] leading-[0.92] tracking-[-0.03em]"
+            className="text-[clamp(2.25rem,6vw,6rem)] leading-[0.95] tracking-[-0.03em]"
           >
             Ready to build
             <br />
@@ -99,19 +146,23 @@ export function FinalCTA() {
           </motion.ul>
         </motion.div>
 
-        {/* The embed wrapper. bg-paper gives the Cal.com UI (which is light
-            by default in auto theme) a solid background so it does not bleed
-            into the surrounding ink section. rounded-card matches the design
-            language used elsewhere on the site. */}
-        <div className="min-h-140 overflow-hidden rounded-card bg-paper text-ink aspect-square sm:aspect-auto sm:min-h-160">
+        {/* The embed wrapper: a hairline frame instead of the old white
+            card. cal-bg matches the section ink, so the frame is the only
+            thing marking the panel's edge. Crucially there is no fixed
+            height or aspect ratio any more — Cal's inline embed resizes its
+            own iframe to fit the content, and the old height + overflow
+            combination is what cropped the booker into an inner scrollbar
+            when picking a slot expanded it. min-h only guards against the
+            pre-load collapse. */}
+        <div className="min-h-[560px] self-start overflow-hidden rounded-2xl border border-paper/15 p-2 sm:p-3">
           <Cal
             namespace="client-meeting"
             calLink="ezibuilds/client-meeting"
-            style={{ width: "100%", height: "100%", overflow: "scroll" }}
+            style={{ width: "100%" }}
             config={{
               layout: "month_view",
               useSlotsViewOnSmallScreen: "true",
-              theme: "light",
+              theme: "dark",
             }}
           />
         </div>

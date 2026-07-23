@@ -80,28 +80,29 @@ function OfferCard({
         {offer.name}
       </h3>
 
+      {/* One intro line, not two: the old tagline + position pair said the
+          same thing twice and pushed the list below the fold of a glance.
+          The "for X" line is the one that lets a buyer self-select. */}
       <p className="mt-3 text-sm leading-relaxed opacity-80 sm:text-base">
-        {offer.tagline}
-      </p>
-
-      <p className="mt-2 text-sm leading-relaxed opacity-70 sm:text-base">
         {offer.position}
       </p>
 
-      <p className="mt-8 mb-3 text-[11px] uppercase tracking-[0.22em] opacity-65">
-        Inside the partnership
-      </p>
-
-      <ul className="space-y-2 text-sm sm:text-base">
+      {/* No "Inside the partnership" eyebrow — a five-row list under the
+          offer name explains itself, and the caps register is reserved for
+          the assurance fine print at the foot of the card. */}
+      <ul className="mt-8 space-y-3 text-sm sm:text-base">
         {offer.includes.map((item) => (
           <li key={item} className="flex items-start gap-2.5">
             {/* Standard rows use a tiny disc — same rhythm as the row labels
                 on the work-detail page so the card reads as part of the
-                site, not its own thing. */}
+                site, not its own thing. The w-3 box matches the check icon's
+                width so both row types share one text edge. */}
             <span
               aria-hidden
-              className="mt-2.5 inline-block h-1 w-1 shrink-0 rounded-full bg-current opacity-70"
-            />
+              className="mt-2 flex h-3 w-3 shrink-0 items-center justify-center"
+            >
+              <span className="h-1 w-1 rounded-full bg-current opacity-70" />
+            </span>
             <span>{item}</span>
           </li>
         ))}

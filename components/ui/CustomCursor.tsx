@@ -34,6 +34,18 @@ export function CustomCursor() {
     const onOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
+
+      // Cross-origin iframes (the Cal.com embed) capture the pointer: the
+      // parent window receives no mousemove inside them, so the custom cursor
+      // would otherwise freeze at the iframe's edge. Hide it on entry and let
+      // the iframe's own native cursor take over; moving back onto the page
+      // fires mouseover with a non-iframe target and restores it below.
+      if (target.tagName === "IFRAME") {
+        setHidden(true);
+        return;
+      }
+      setHidden(false);
+
       const el = target.closest<HTMLElement>("[data-cursor]");
       if (!el) {
         setVariant("default");

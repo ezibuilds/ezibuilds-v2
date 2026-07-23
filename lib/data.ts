@@ -1,3 +1,16 @@
+/**
+ * Card screenshot. "desktop" shots are browser captures shown as a window
+ * peeking from the card's bottom edge; "mobile" shots are phone-tall
+ * captures shown as a device panel. Full-page captures (the *-complete
+ * files) are pre-cropped to their top viewport as *-hero.webp — anything
+ * still taller than the panel is cropped by object-top, so the card always
+ * shows the top of the product.
+ */
+export type WorkShot = {
+  src: string;
+  kind: "desktop" | "mobile";
+};
+
 export type Work = {
   slug: string;
   client: string;
@@ -9,6 +22,7 @@ export type Work = {
   textColor?: string;
   href: string;
   comingSoon?: boolean;
+  shot?: WorkShot;
 };
 
 export const categories = [
@@ -41,6 +55,7 @@ export const works: Work[] = [
     accent: "#F5D9A8",
     textColor: "#1d1d1d",
     href: "/work/hostelgo",
+    shot: { src: "/projects/hostelgo-shot-1.webp", kind: "mobile" },
   },
   {
     slug: "fraudex",
@@ -52,6 +67,7 @@ export const works: Work[] = [
     accent: "#A9E5E3",
     textColor: "#1d1d1d",
     href: "/work/fraudex",
+    shot: { src: "/projects/fraudex-hero.webp", kind: "desktop" },
   },
   {
     slug: "jobezi",
@@ -63,6 +79,7 @@ export const works: Work[] = [
     accent: "#DDB3E9",
     textColor: "#1d1d1d",
     href: "/work/jobezi",
+    shot: { src: "/projects/jobezi-wide.webp", kind: "desktop" },
   },
   {
     slug: "tambolens",
@@ -74,6 +91,7 @@ export const works: Work[] = [
     accent: "#AFD9A4",
     textColor: "#1d1d1d",
     href: "/work/tambolens",
+    shot: { src: "/projects/tambolens-hero.webp", kind: "desktop" },
   },
   {
     slug: "assetflow",
@@ -252,12 +270,13 @@ export const products: Product[] = [
 export type Offer = {
   slug: string;
   name: string;
-  tagline: string;
-  /** Short "for X" subtitle shown under the tagline. */
+  /** One "for X" line under the name — the only intro copy on the card. */
   position: string;
   /**
    * Standard inclusions — the buyer-anxiety list. Maydit shows these as plain
    * text bullets, no icons; the visual weight is on the `highlights` below.
+   * Capped at five: related services are merged into one row so the card
+   * scans as a list, not a wall.
    */
   includes: string[];
   /**
@@ -278,17 +297,13 @@ export const offers: Offer[] = [
   {
     slug: "product-partnership",
     name: "Embedded Team",
-    tagline: "Long-term design and engineering for ambitious teams.",
     position: "For startups that need an extension of their team.",
     includes: [
-      "Dedicated Product Designer",
-      "Dedicated Full-stack Developer",
-      "Weekly Sprint Planning",
-      "Unlimited Design Requests",
-      "Slack / WhatsApp Collaboration",
-      "Product Roadmapping",
-      "AI Solutions & Automation",
-      "Priority Support",
+      "Dedicated designer & full-stack developer",
+      "Weekly sprints & product roadmapping",
+      "Unlimited design requests",
+      "AI solutions & automation",
+      "Priority support on Slack / WhatsApp",
     ],
     highlights: [
       "7-day risk-free trial",
@@ -301,21 +316,19 @@ export const offers: Offer[] = [
   {
     slug: "fixed-scope",
     name: "Project Launch",
-    tagline: "Fixed-scope delivery for websites, apps, and MVPs.",
     position: "For businesses launching a website, app, or MVP.",
     includes: [
-      "Discovery Workshop",
-      "UX/UI Design",
-      "Website or App Development",
-      "AI Integration (if required)",
-      "QA & Performance Testing",
-      "SEO Best Practices",
-      "Documentation & Handover",
-      "14 Days Launch Support",
+      "Discovery workshop & UX/UI design",
+      "Website or app development",
+      "AI integration where it fits",
+      "QA, SEO & performance testing",
+      "Documentation & handover",
     ],
+    // "50% upfront" lives in the assurance line only — it sat in both and
+    // read as padding.
     highlights: [
-      "50% upfront, 50% on delivery",
-      "Fixed timeline, no surprise scope creep",
+      "14 days of launch support",
+      "Fixed timeline, no scope creep",
     ],
     assurance: "Split payment — 50% now, 50% upon completion.",
     cta: "Start Your Project",
@@ -325,17 +338,13 @@ export const offers: Offer[] = [
   {
     slug: "growth-partnership",
     name: "Growth Partner",
-    tagline: "Creative production and growth for products ready to scale.",
     position: "For products that are live and ready to grow.",
     includes: [
-      "Video Editing",
-      "Product Videos",
-      "Motion Graphics",
-      "Social Media Reels",
-      "AI Creative Production",
-      "Performance Marketing",
-      "Conversion Rate Optimization",
-      "Monthly Analytics & Reporting",
+      "Product videos & motion graphics",
+      "Social reels & short-form video",
+      "AI creative production",
+      "Performance marketing",
+      "Conversion rate optimization",
     ],
     highlights: [
       "Monthly growth reports",

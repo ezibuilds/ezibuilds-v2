@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { categories, works, type Work } from "@/lib/data";
 import { cn } from "@/lib/cn";
+import { ProjectShot } from "@/components/ui/ProjectShot";
 import { DURATION, EASE, VIEWPORT, revealProps } from "@/lib/motion";
 
 export function SelectedWork() {
@@ -131,24 +132,59 @@ function WorkCard({ work, index }: { work: Work; index: number }) {
             // The radius has to live on the element that scales. Rounding only
             // the parent means shrinking this child pulls its square corners
             // inside the parent's mask, and the corners go hard on hover.
-            className="relative flex aspect-[5/6] flex-col justify-between overflow-hidden rounded-[28px] p-7 sm:p-9 lg:aspect-[4/5]"
+            className={cn(
+              "relative flex aspect-[5/6] flex-col overflow-hidden rounded-[28px] p-7 sm:p-9 lg:aspect-[4/5]",
+              !work.shot && "justify-between"
+            )}
             style={{ background: work.accent, color: text }}
           >
-            <div className="flex items-start justify-between text-[11px] uppercase tracking-[0.22em] opacity-85">
+            {/* flex-wrap + nowrap chip: on narrow columns the pill drops to
+                its own line instead of wrapping internally into a two-line
+                pill that collides with the client label. */}
+            <div className="relative z-10 flex flex-wrap items-start justify-between gap-2 text-[11px] uppercase tracking-[0.22em] opacity-85">
               <span>{work.client}</span>
-              <span className="rounded-full border border-current/30 px-3 py-1">
+              <span className="whitespace-nowrap rounded-full border border-current/30 px-3 py-1">
                 {work.comingSoon ? "Coming soon" : work.category}
               </span>
             </div>
-            <div>
-              <h3 className="text-[clamp(1.75rem,5.5vw,4.25rem)] leading-[0.95] tracking-[-0.02em]">
-                {work.client}
-              </h3>
-              <div className="mt-4 flex items-center justify-between text-[11px] uppercase tracking-[0.22em] opacity-80">
-                <span>{work.year}</span>
-                <span>{work.tags.slice(0, 3).join(" / ")}</span>
+
+            {work.shot ? (
+              <>
+                {/* Text moves to the head of the card so the screenshot can
+                    own the lower half, peeking past the bottom edge like the
+                    typographic cards' big name used to sit. */}
+                <div className="relative z-10 mt-4">
+                  <h3 className="text-[clamp(1.75rem,3vw,2.75rem)] leading-[0.95] tracking-[-0.02em]">
+                    {work.client}
+                  </h3>
+                  {/* Two tags, not three: on the 2/3-col grid the third tag
+                      wrapped the line and pushed the shot down the card. */}
+                  <p className="mt-2.5 text-[11px] uppercase tracking-[0.22em] opacity-80">
+                    {work.year} · {work.tags.slice(0, 2).join(" / ")}
+                  </p>
+                </div>
+                <ProjectShot
+                  shot={work.shot}
+                  eager={index < 3}
+                  sizes="(min-width: 1024px) 28vw, (min-width: 640px) 44vw, 84vw"
+                  className={
+                    work.shot.kind === "mobile"
+                      ? "bottom-0 left-1/2 h-[54%] -translate-x-1/2"
+                      : "inset-x-[7%] bottom-0 h-[52%]"
+                  }
+                />
+              </>
+            ) : (
+              <div>
+                <h3 className="text-[clamp(1.75rem,5.5vw,4.25rem)] leading-[0.95] tracking-[-0.02em]">
+                  {work.client}
+                </h3>
+                <div className="mt-4 flex items-center justify-between text-[11px] uppercase tracking-[0.22em] opacity-80">
+                  <span>{work.year}</span>
+                  <span>{work.tags.slice(0, 3).join(" / ")}</span>
+                </div>
               </div>
-            </div>
+            )}
           </motion.div>
         </ViewTransition>
       </Link>
